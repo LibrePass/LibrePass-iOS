@@ -1,0 +1,16 @@
+PODS:
+  - SignalArgon2 (1.3.2)
+
+DEPENDENCIES:
+  - SignalArgon2
+
+SPEC REPOS:
+  trunk:
+    - SignalArgon2
+
+SPEC CHECKSUMS:
+  SignalArgon2: 1c24183835ca861e6af06631c18b1671cdf35571
+
+PODFILE CHECKSUM: 8ccac2ef4685cb89beaa9a73068be70ba72e1893
+
+COCOAPODS: 1.15.2
