@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Clean
+        shell: bash
+        run: make clean
+
+      - name: Build LibrePass.ipa
+        shell: bash
+        run: make
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-iphoneos
+          path: ./Build/Products/Release-iphoneos/LibrePass.ipa
+          
