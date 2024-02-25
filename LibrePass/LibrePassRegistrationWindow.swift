@@ -20,47 +20,45 @@ struct LibrePassRegistrationWindow: View {
     @State var showAlert = false
     @State var registered = false
     
-    @State var errorIndicator = " "
+    @State var errorString = " "
     
     var body: some View {
-        NavigationView {
-            List {
-                TextField("Email", text: $email)
-                    .autocapitalization(.none)
-                SecureField("Password", text: $password)
-                    .autocapitalization(.none)
-                SecureField("Confirm password", text: $confirmPassword)
-                    .autocapitalization(.none)
-                TextField("Password hint", text: $passwordHint)
-                TextField("API server", text: $apiServer)
-                    .autocapitalization(.none)
-                
-                Button("Register") {
-                    if self.confirmPassword != self.password {
-                        self.confirmPassword = ""
-                        
-                        self.errorIndicator = "Password doesn't match"
-                        return
-                    }
+        List {
+            TextField("Email", text: $email)
+                .autocapitalization(.none)
+            SecureField("Password", text: $password)
+                .autocapitalization(.none)
+            SecureField("Confirm password", text: $confirmPassword)
+                .autocapitalization(.none)
+            TextField("Password hint", text: $passwordHint)
+            TextField("API server", text: $apiServer)
+                .autocapitalization(.none)
+            
+            Button("Register") {
+                if self.confirmPassword != self.password {
+                    self.confirmPassword = ""
                     
-                    do {
-                        self.lClient.replaceApiClient(apiUrl: apiServer)
-                        try self.lClient.register(email: self.email, password: self.password, passwordHint: self.passwordHint)
-                        
-                        self.errorIndicator = "Check your mailbox, verify email and log in"
-                        self.registered = true
-                        self.showAlert = true
-                    } catch {
-                        self.errorIndicator = error.localizedDescription
-                        self.showAlert = true
-                    }
+                    self.errorString = "Password doesn't match"
+                    return
+                }
+                
+                do {
+                    self.lClient.replaceApiClient(apiUrl: apiServer)
+                    try self.lClient.register(email: self.email, password: self.password, passwordHint: self.passwordHint)
+                    
+                    self.errorString = "Check your mailbox, verify email and log in"
+                    self.registered = true
+                    self.showAlert = true
+                } catch {
+                    self.errorString = error.localizedDescription
+                    self.showAlert = true
                 }
             }
-            
-            .navigationTitle("Registration")
         }
+            
+        .navigationTitle("Registration")
         
-        .alert(self.errorIndicator, isPresented: self.$showAlert) {
+        .alert(self.errorString, isPresented: self.$showAlert) {
             Button("OK", role: .cancel) {
                 if self.registered {
                     self.registered = false

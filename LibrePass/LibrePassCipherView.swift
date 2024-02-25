@@ -19,19 +19,13 @@ struct CipherView: View {
     }
     
     var body: some View {
-        ScrollView {
-            switch self.cipher.type {
-            case LibrePassCipher.CipherType.Login:
-                CipherLoginDataView(cipher: self.cipher, index: index, save: save)
-            case LibrePassCipher.CipherType.SecureNote:
-                CipherSecureNoteView(cipher: self.cipher, index: index, save: save)
-            case LibrePassCipher.CipherType.Card:
-                CipherCardDataView(cipher: self.cipher, index: index, save: save)
-            }
-        }
-        
-        .toolbar {
-            CipherDeleteButton(lClient: $lClient, id: cipher.id)
+        switch self.cipher.type {
+        case LibrePassCipher.CipherType.Login:
+            CipherLoginDataView(cipher: self.cipher, index: index, save: save)
+        case LibrePassCipher.CipherType.SecureNote:
+            CipherSecureNoteView(cipher: self.cipher, index: index, save: save)
+        case LibrePassCipher.CipherType.Card:
+            CipherCardDataView(cipher: self.cipher, index: index, save: save)
         }
     }
 }
@@ -49,121 +43,36 @@ struct CipherLoginDataView: View {
     @State var notes = String()
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("Name").foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            HStack {
+        List {
+            Section(header: Text("Login data")) {
                 TextField("Name", text: $name)
-            }
-        }
-        .padding()
-        
-        HStack {
-            VStack {
-                HStack {
-                    Text("Username").foregroundStyle(Color.secondary)
-                    Spacer()
-                }
-                HStack {
-                    TextField("Username", text: $username)
-                        .autocapitalization(.none)
-                }
+                TextFieldWithCopyButton(text: "Username", textBind: self.$username)
+                SecureFieldWithCopyAndShowButton(text: "Password", textBind: self.$password)
             }
             
-            HStack {
-                Button(action: {
-                    UIPasteboard.general.string = username
-                }) {
-                    Image(systemName: "doc.on.doc")
-                }
-                .font(.system(size: 25))
-                .foregroundColor(Color.primary)
-            }
-        }
-        .padding()
-        
-        HStack {
-            VStack {
-                HStack {
-                    Text("Password").foregroundStyle(Color.secondary)
-                    Spacer()
-                }
-                HStack {
-                    if self.showPassword {
-                        TextField("Password", text: $password)
-                            .autocapitalization(.none)
-                    } else {
-                        SecureField("Password", text: $password)
-                            .autocapitalization(.none)
+            Section(header: Text("URIs")) {
+                ForEach(self.uris.indices, id: \.self) { index in
+                    HStack {
+                        TextFieldWithCopyButton(text: "URI " + String(index + 1), textBind: self.$uris[index])
                     }
                 }
-            }
-            
-            Spacer()
-            
-            HStack {
-                Button(action: {
-                    self.showPassword.toggle()
-                }) {
-                    if self.showPassword {
-                        Image(systemName: "eye")
-                    } else {
-                        Image(systemName: "eye.fill")
-                    }
+                .onDelete { index in
+                    self.uris.remove(atOffsets: index)
                 }
-                .font(.system(size: 25))
-                .foregroundStyle(Color.primary)
                 
-                Button(action: {
-                    UIPasteboard.general.string = password
-                }) {
-                    Image(systemName: "doc.on.doc")
+                Button("Add") {
+                    self.uris.append("")
                 }
-                .font(.system(size: 25))
-                .foregroundColor(Color.primary)
-            }
-        }
-        .padding()
-        
-        VStack {
-            HStack {
-                Text("URIs")
-                    .foregroundStyle(Color.secondary)
-                Spacer()
             }
             
-            ForEach(self.uris.indices, id: \.self) { index in
-                HStack {
-                    TextField("URI " + String(index + 1), text: self.$uris[index])
-                        .autocapitalization(.none)
-                    Button(action: {
-                        self.uris.remove(at: index)
-                    }) {
-                        Image(systemName: "trash")
-                            .foregroundColor(Color.red)
-                    }
-                }
-                .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
+            Section(header: Text("Notes")) {
+                TextField("Notes", text: self.$notes)
             }
             
-            Button("Add") {
-                self.uris.append("")
+            Section {
+                ButtonWithSpinningWheel(text: "Save", task: self.saveCipher)
             }
-            
         }
-        .padding()
-        
-        VStack {
-            HStack {
-                Text("Notes")
-                    .foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            TextField("Notes", text: self.$notes)
-        }
-        .padding()
         
         .onAppear {
             self.name = self.cipher.loginData!.name
@@ -172,16 +81,16 @@ struct CipherLoginDataView: View {
             self.uris = self.cipher.loginData!.uris ?? []
             self.notes = self.cipher.loginData!.notes ?? ""
         }
+    }
+    
+    func saveCipher() throws {
+        self.cipher.loginData!.name = self.name
+        self.cipher.loginData!.username = self.username
+        self.cipher.loginData!.password = self.password
+        self.cipher.loginData!.uris = self.uris
+        self.cipher.loginData!.notes = self.notes
         
-        Button("Save") {
-            self.cipher.loginData!.name = self.name
-            self.cipher.loginData!.username = self.username
-            self.cipher.loginData!.password = self.password
-            self.cipher.loginData!.uris = self.uris
-            self.cipher.loginData!.notes = self.notes
-        
-            self.save(self.cipher)
-        }
+        self.save(self.cipher)
     }
 }
 
@@ -189,42 +98,27 @@ struct CipherSecureNoteView: View {
     var cipher: LibrePassCipher
     var index: Int
     var save: (_ cipher: LibrePassCipher) -> ()
-    @State var secureNoteData: LibrePassCipher.CipherSecureNoteData
-    
-    init(cipher: LibrePassCipher, index: Int, save: @escaping (_ cipher: LibrePassCipher) -> ()) {
-        self.cipher = cipher
-        self.index = index
-        self.secureNoteData = self.cipher.secureNoteData!
-        self.save = save
-    }
+    @State var title: String = String()
+    @State var note: String = String()
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("Title").foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            HStack {
-                TextField("Title", text: self.$secureNoteData.title)
-            }
+        List {
+            TextFieldWithCopyButton(text: "Title", textBind: self.$title)
+            TextFieldWithCopyButton(text: "Note", textBind: self.$note)
+            
+            ButtonWithSpinningWheel(text: "Save", task: self.saveCipher)
         }
-        .padding()
         
-        VStack {
-            HStack {
-                Text("Notes").foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            HStack {
-                TextField("Notes", text: self.$secureNoteData.note)
-            }
+        .onAppear {
+            self.title = self.cipher.secureNoteData!.title
+            self.note = self.cipher.secureNoteData!.note
         }
-        .padding()
-        
-        Button("Save") {
-            self.cipher.secureNoteData = self.secureNoteData
-            self.save(self.cipher)
-        }
+    }
+    
+    func saveCipher() throws {
+        self.cipher.secureNoteData!.title = title
+        self.cipher.secureNoteData!.note = note
+        self.save(self.cipher)
     }
 }
 
@@ -242,100 +136,23 @@ struct CipherCardDataView: View {
     @State var notes = String()
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("Name")
-                    .foregroundStyle(Color.secondary)
-                Spacer()
+        List {
+            Section(header: Text("Card data")) {
+                TextField("Name", text: self.$name)
+                TextFieldWithCopyButton(text: "Cardholder name", textBind: self.$cardholderName)
+                SecureFieldWithCopyAndShowButton(text: "Card number", textBind: self.$number)
+                TextFieldWithCopyButton(text: "Expires in month", textBind: self.$expMonth)
+                TextFieldWithCopyButton(text: "Expires in year", textBind: self.$expYear)
+                SecureFieldWithCopyAndShowButton(text: "Security code", textBind: self.$code)
             }
-            HStack {
-                TextField("Name", text: $name)
-            }
-        }
-        .padding()
-        
-        VStack {
-            HStack {
-                Text("Cardholder name")
-                    .foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            HStack {
-                TextField("Cardholder name", text: $cardholderName)
-            }
-        }
-        .padding()
-        
-        VStack {
-            HStack {
-                Text("Number")
-                    .foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            HStack {
-                TextField("Number", text: $number)
-            }
-        }
-        .padding()
-        
-        VStack {
-            HStack {
-                Text("Expires in month")
-                    .foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            HStack {
-                TextField("Expires in month", text: $expMonth)
-            }
-        }
-        .padding()
-        
-        VStack {
-            HStack {
-                Text("Expires in year")
-                    .foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            HStack {
-                TextField("Expires in year", text: $expYear)
-            }
-        }
-        .padding()
-        
-        VStack {
-            HStack {
-                Text("Code")
-                    .foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            HStack {
-                TextField("Code", text: $code)
-            }
-        }
-        .padding()
-        
-        VStack {
-            HStack {
-                Text("Notes")
-                    .foregroundStyle(Color.secondary)
-                Spacer()
-            }
-            HStack {
-                TextField("Notes", text: $notes)
-            }
-        }
-        .padding()
-        
-        Button("Save") {
-            self.cipher.cardData!.name = self.name
-            self.cipher.cardData!.cardholderName = self.cardholderName
-            self.cipher.cardData!.number = self.number
-            self.cipher.cardData!.expMonth = Int(self.expMonth) ?? nil
-            self.cipher.cardData!.expYear = Int(self.expYear) ?? nil
-            self.cipher.cardData!.code = self.code
-            self.cipher.cardData!.notes = self.notes
             
-            self.save(self.cipher)
+            Section(header: Text("Notes")) {
+                TextFieldWithCopyButton(text: "Notes", textBind: self.$notes)
+            }
+            
+            Section {
+                ButtonWithSpinningWheel(text: "Save", task: self.saveCipher)
+            }
         }
         
         .onAppear {
@@ -358,6 +175,18 @@ struct CipherCardDataView: View {
             self.code = self.cipher.cardData!.code ?? ""
             self.notes = self.cipher.cardData!.notes ?? ""
         }
+    }
+    
+    func saveCipher() throws {
+        self.cipher.cardData!.name = self.name
+        self.cipher.cardData!.cardholderName = self.cardholderName
+        self.cipher.cardData!.number = self.number
+        self.cipher.cardData!.expMonth = Int(self.expMonth) ?? nil
+        self.cipher.cardData!.expYear = Int(self.expYear) ?? nil
+        self.cipher.cardData!.code = self.code
+        self.cipher.cardData!.notes = self.notes
+        
+        self.save(self.cipher)
     }
 }
 
@@ -405,7 +234,7 @@ struct CipherDeleteButton: View {
     var id: String
     
     @State var areYouSure = false
-    @State var errorIndicator = String()
+    @State var errorString = String()
     @State var showAlert = false
     
     var body: some View {
@@ -426,7 +255,7 @@ struct CipherDeleteButton: View {
             Button("No", role: .cancel) {}
         }
         
-        .alert(self.errorIndicator, isPresented: $showAlert) {
+        .alert(self.errorString, isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
         }
     }

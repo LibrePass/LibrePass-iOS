@@ -22,6 +22,7 @@
 		B253F1E52B83976900D048F9 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B253F1E32B83976900D048F9 /* LICENSE */; };
 		B253F1E62B83976900D048F9 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B253F1E42B83976900D048F9 /* README.md */; };
 		B2780F062B8A43C200835EE3 /* LibrePassRegistrationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2780F052B8A43C200835EE3 /* LibrePassRegistrationWindow.swift */; };
+		B28E06202B8BBD1900F48661 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28E061F2B8BBD1900F48661 /* Utils.swift */; };
 		B2D4447B2B87D0DF0031A685 /* Vault.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D4447A2B87D0DF0031A685 /* Vault.swift */; };
 		B2D91A1D2B8393C70004561A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2D91A1C2B8393C70004561A /* Assets.xcassets */; };
 		B2D91A202B8393C70004561A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2D91A1F2B8393C70004561A /* Preview Assets.xcassets */; };
@@ -46,6 +47,7 @@
 		B253F1E42B83976900D048F9 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B2780F052B8A43C200835EE3 /* LibrePassRegistrationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrePassRegistrationWindow.swift; sourceTree = "<group>"; };
 		B28DFDBD2B8B6DC1007D5837 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		B28E061F2B8BBD1900F48661 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		B2D4447A2B87D0DF0031A685 /* Vault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vault.swift; sourceTree = "<group>"; };
 		B2D91A152B8393C60004561A /* LibrePass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LibrePass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2D91A1C2B8393C70004561A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */,
 				B253F1CF2B83942B00D048F9 /* LibrePassManagerWindow.swift */,
 				B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */,
+				B28E061F2B8BBD1900F48661 /* Utils.swift */,
 				B253F1E22B8394EE00D048F9 /* LibrePass-Bridging-Header.h */,
 				B2D91A1C2B8393C70004561A /* Assets.xcassets */,
 				B2D91A1E2B8393C70004561A /* Preview Content */,
@@ -268,6 +271,7 @@
 				B2D4447B2B87D0DF0031A685 /* Vault.swift in Sources */,
 				B2780F062B8A43C200835EE3 /* LibrePassRegistrationWindow.swift in Sources */,
 				B253F1DD2B83942B00D048F9 /* LibrePassApp.swift in Sources */,
+				B28E06202B8BBD1900F48661 /* Utils.swift in Sources */,
 				B253F1D82B83942B00D048F9 /* LibrePassLocalLogin.swift in Sources */,
 				B253F1E12B83942B00D048F9 /* LibrePassEncryptedCipher.swift in Sources */,
 				B253F1DB2B83942B00D048F9 /* CredentialsDatabase.swift in Sources */,

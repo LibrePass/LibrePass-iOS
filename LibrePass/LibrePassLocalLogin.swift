@@ -14,40 +14,24 @@ struct LibrePassLocalLogin: View {
     @State private var password = String()
     
     @State private var showAlert = false
-    @State private var errorIndicator = " "
-    
+    @State private var errorString = " "
+
     var body: some View {
-        NavigationView {
-            List {
-                SecureField("Password", text: $password)
-                    .autocapitalization(.none)
-                Button("Log in") {
-                    self.errorIndicator = " "
-                    
-                    do {
-                        let credentials = try LibrePassCredentialsDatabase.load()
-                        lClient = try LibrePassClient(credentials: credentials, password: self.password)
-                        
-                        try lClient.syncVault()
-                        
-                        self.loggedIn = true
-                    } catch LibrePassApiErrors.WithMessage(let message) {
-                        self.errorIndicator = message
-                        if message == "Invalid credentials" {
-                            self.password = ""
-                        }
-                        self.showAlert = true
-                    } catch {
-                        self.errorIndicator = error.localizedDescription
-                    }
-                }
-            }
-            
-            .navigationTitle("Log in to LibrePass")
+        List {
+            SecureField("Password", text: $password)
+                .autocapitalization(.none)
+            ButtonWithSpinningWheel(text: "Unlock vault", task: self.login)
         }
         
-        .alert(self.errorIndicator, isPresented: self.$showAlert) {
-            Button("OK", role: .cancel) {}
-        }
+        .navigationTitle("Unlock vault")
+    }
+    
+    func login() throws {
+        self.errorString = " "
+        
+        let credentials = try LibrePassCredentialsDatabase.load()
+        lClient = try LibrePassClient(credentials: credentials, password: self.password)
+            
+        self.loggedIn = true
     }
 }
