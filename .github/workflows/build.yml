@@ -28,5 +28,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: release-iphoneos
-          path: ./Build/Products/Release-iphoneos/LibrePass.ipa
+          path: ./Build/Release-iphoneos/LibrePass.ipa
           
