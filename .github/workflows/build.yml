@@ -2,9 +2,8 @@ name: Build
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,10 +11,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
+        
       - name: Clean
         shell: bash
         run: make clean
+
+      - name: Get dependencies
+        shell: bash
+        run: pod install
 
       - name: Build LibrePass.ipa
         shell: bash
