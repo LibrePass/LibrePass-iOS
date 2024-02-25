@@ -1,3 +1,4 @@
+/Build
 /Pods
 /.DS_Store
-/**/zapomnij.xcuserdatad
+/**/*.xcuserdatad
