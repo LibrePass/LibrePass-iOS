@@ -61,6 +61,6 @@ struct MainWindow: View {
 }
 
 
-#Preview {
-    MainWindow()
-}
+//#Preview {
+//    MainWindow()
+//}
