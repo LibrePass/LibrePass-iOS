@@ -18,19 +18,35 @@ struct LibrePassLocalLogin: View {
 
     var body: some View {
         List {
-            SecureField("Password", text: $password)
-                .autocapitalization(.none)
-            ButtonWithSpinningWheel(text: "Unlock vault", task: self.login)
+            Section(header: Text("Login")) {
+                SecureField("Password", text: $password)
+                    .autocapitalization(.none)
+                ButtonWithSpinningWheel(text: "Unlock vault", task: self.login)
+            }
+            
+            Section(header: Text("If you're encountering crashes after update, try clearing local saved Vault. WARNING! THIS WILL DELETE VAULT SAVED ON THE DISK")) {
+                ButtonWithSpinningWheel(text: "Clear vault", task: self.clearVault, color: Color.red)
+            }
         }
+    }
+    
+    func clearVault() throws {
+        self.errorString = " "
         
-        .navigationTitle("Unlock vault")
+        let credentials = try LibrePassCredentialsDatabase.load()
+        self.lClient = try LibrePassClient(credentials: credentials, password: self.password)
+        
+        try self.lClient.fetchCiphers()
+        
+        self.lClient.unAuth()
     }
     
     func login() throws {
         self.errorString = " "
         
         let credentials = try LibrePassCredentialsDatabase.load()
-        lClient = try LibrePassClient(credentials: credentials, password: self.password)
+        self.lClient = try LibrePassClient(credentials: credentials, password: self.password)
+        try self.lClient.syncVault()
             
         self.loggedIn = true
     }

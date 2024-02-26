@@ -17,6 +17,8 @@ struct LibrePassApp: App {
     }
 }
 
+var networkMonitor = NetworkMonitor()
+
 struct MainWindow: View {
     @Environment(\.scenePhase) private var scenePhase
     
@@ -24,6 +26,8 @@ struct MainWindow: View {
     
     @State var localLogIn = false
     @State var loggedIn = false
+    
+    @State var showAbout = false
     
     var body: some View {
         HStack {
@@ -41,7 +45,13 @@ struct MainWindow: View {
                             Text("Register")
                         }
                     }
-                    .navigationTitle("Log in to LibrePass")
+                    
+                    .navigationTitle("Welcome to LibrePass!")
+                    .toolbar {
+                        Button(action: { self.showAbout = true }) {
+                            Image(systemName: "info.circle")
+                        }
+                    }
                 }
             }
         }
@@ -53,9 +63,29 @@ struct MainWindow: View {
         .onChange(of: scenePhase) { (phase) in
             if phase == .background {
                 lClient.unAuth()
-                self.localLogIn = true
                 self.loggedIn = false
             }
+        }
+        
+        .sheet(isPresented: self.$showAbout) {
+            VStack {
+                Image("Icon")
+                    .resizable()
+                    .cornerRadius(5.0)
+                    .frame(width: 100, height: 100)
+                    .padding()
+                
+                Text("Copyright © 2024 LibrePass Team")
+                Text("LibrePass server: Medzik (Oskar) and contributors")
+                Text("LibrePass app for iOS: Zapomnij (Jacek)")
+                
+                Link("See on Github", destination: URL(string: "https://github.com/LibrePass")!)
+                    .padding()
+                
+                Link("See website", destination: URL(string: "https://librepass.org")!)
+                    .padding()
+            }
+            .padding()
         }
     }
 }

@@ -8,13 +8,10 @@
 import Foundation
 import CryptoKit
 
-class LibrePassEncryptedVault: Codable {
+struct LibrePassEncryptedVault: Codable {
     var vault: [LibrePassEncryptedCipher] = []
+    var toSync: [Bool] = []
     var lastSync: Int64
-    
-    init(lastSync: Int64) {
-        self.lastSync = lastSync
-    }
     
     static func loadVault() throws -> Self {
         let vaultJson = UserDefaults.standard.data(forKey: "vault")!
@@ -29,9 +26,9 @@ class LibrePassEncryptedVault: Codable {
     }
     
     func decryptVault(key: SymmetricKey) throws -> LibrePassDecryptedVault {
-        var ciphers: LibrePassDecryptedVault = LibrePassDecryptedVault(lastSync: self.lastSync)
-        for encCipher in self.vault {
-            ciphers.vault.append(try LibrePassCipher(encCipher: encCipher, key: key))
+        var ciphers: LibrePassDecryptedVault = LibrePassDecryptedVault(toSync: self.toSync, lastSync: self.lastSync, key: key)
+        for (i, encCipher) in self.vault.enumerated() {
+            try ciphers.addOrReplace(cipher: try LibrePassCipher(encCipher: encCipher, key: key), toSync: self.toSync[i], save: false)
         }
         
         return ciphers
@@ -42,18 +39,47 @@ class LibrePassEncryptedVault: Codable {
     }
 }
 
-class LibrePassDecryptedVault {
+struct LibrePassDecryptedVault {
     var vault: [LibrePassCipher] = []
+    var toSync: [Bool] = []
     var lastSync: Int64
+    var key: SymmetricKey?
     
-    init(lastSync: Int64) {
-        self.lastSync = lastSync
+    mutating func addOrReplace(cipher: LibrePassCipher, toSync: Bool, save: Bool) throws {
+        if let idx = self.vault.firstIndex(where: { ciph in ciph.id == cipher.id }) {
+            self.vault[idx] = cipher
+            self.toSync[idx] = toSync
+        } else {
+            self.vault.append(cipher)
+            self.toSync.append(toSync)
+        }
+        
+        if save {
+            try self.encryptVault().saveVault()
+        }
     }
     
-    func encryptVault(key: SymmetricKey) throws -> LibrePassEncryptedVault {
-        var encCiphers: LibrePassEncryptedVault = LibrePassEncryptedVault(lastSync: self.lastSync)
+    mutating func remove(id: String, save: Bool) throws {
+        if let cipher = self.vault.first(where: { cipher in cipher.id == id }) {
+            try self.remove(cipher: cipher, save: save)
+        }
+    }
+    
+    mutating func remove(cipher: LibrePassCipher, save: Bool) throws {
+        if let idx = self.vault.firstIndex(where: { ciph in ciph.id == cipher.id }) {
+            self.vault.remove(at: idx)
+            self.toSync.remove(at: idx)
+            
+            if save {
+                try self.encryptVault().saveVault()
+            }
+        }
+    }
+    
+    func encryptVault() throws -> LibrePassEncryptedVault {
+        var encCiphers: LibrePassEncryptedVault = LibrePassEncryptedVault(toSync: self.toSync, lastSync: self.lastSync)
         for cipher in self.vault {
-            encCiphers.vault.append(try LibrePassEncryptedCipher(cipher: cipher, key: key))
+            encCiphers.vault.append(try LibrePassEncryptedCipher(cipher: cipher, key: self.key!))
         }
         
         return encCiphers

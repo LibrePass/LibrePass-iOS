@@ -74,10 +74,16 @@ struct LibrePassManagerWindow: View {
         }
         
         .onAppear {
-            self.refreshIndicator = true
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                while !self.loggedIn {
+                    
+                }
+                
+                self.refreshIndicator = true
+            }
         }
         
-        .alert(self.errorString + ". Please report this bug on GitHub", isPresented: self.$showAlert) {
+        .alert(self.errorString, isPresented: self.$showAlert) {
             Button("OK", role: .cancel) {
                 lClient.unAuth()
                 self.loggedIn = false
@@ -127,6 +133,7 @@ struct LibrePassManagerWindow: View {
         
         do {
             try self.lClient.put(cipher: cipher)
+            try self.syncVault()
         } catch ApiClientErrors.StatusCodeNot200(let statusCode){
             self.errorString = String(statusCode)
             self.showAlert = true

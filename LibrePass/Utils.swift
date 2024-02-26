@@ -1,5 +1,5 @@
 //
-//  SpinningWheel.swift
+//  Utils.swift
 //  LibrePass
 //
 //  Created by Zapomnij on 25/02/2024.
@@ -23,6 +23,9 @@ struct SpinningWheel: View {
                         do {
                             try self.task()
                             self.isPresented = false
+                        } catch LibrePassApiErrors.WithMessage(let message) {
+                            self.errorString = message
+                            self.showAlert = true
                         } catch {
                             self.errorString = error.localizedDescription
                             self.showAlert = true
@@ -41,12 +44,18 @@ struct SpinningWheel: View {
 struct ButtonWithSpinningWheel: View {
     var text: String
     var task: () throws -> ()
+    var color: Color?
     
     @State var isPresented = false
     
     var body: some View {
         HStack {
-            Button(text) { self.isPresented = true }
+            if let color = self.color {
+                Button(text) { self.isPresented = true }
+                    .foregroundStyle(color)
+            } else {
+                Button(text) { self.isPresented = true }
+            }
             Spacer()
             SpinningWheel(isPresented: self.$isPresented, task: self.task)
         }
@@ -108,5 +117,16 @@ struct SecureFieldWithCopyAndShowButton: View {
             }
             .buttonStyle(.plain)
         }
+    }
+}
+
+
+extension String {
+    func emptyStringToNil() -> Self? {
+        if self.isEmpty {
+            return nil
+        }
+        
+        return self
     }
 }

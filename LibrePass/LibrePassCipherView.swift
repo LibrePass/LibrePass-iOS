@@ -13,9 +13,13 @@ struct CipherView: View {
     var index: Int
     
     func save(cipher: LibrePassCipher) {
-        cipher.lastModified = Int64(Date().timeIntervalSince1970)
-        _ = try? lClient.put(cipher: cipher)
-        _ = try? lClient.syncVault()
+        do {
+            cipher.lastModified = Int64(Date().timeIntervalSince1970)
+            try lClient.put(cipher: cipher)
+            try lClient.syncVault()
+        } catch {
+            
+        }
     }
     
     var body: some View {
@@ -85,10 +89,10 @@ struct CipherLoginDataView: View {
     
     func saveCipher() throws {
         self.cipher.loginData!.name = self.name
-        self.cipher.loginData!.username = self.username
-        self.cipher.loginData!.password = self.password
+        self.cipher.loginData!.username = self.username.emptyStringToNil()
+        self.cipher.loginData!.password = self.password.emptyStringToNil()
         self.cipher.loginData!.uris = self.uris
-        self.cipher.loginData!.notes = self.notes
+        self.cipher.loginData!.notes = self.notes.emptyStringToNil()
         
         self.save(self.cipher)
     }
@@ -183,8 +187,8 @@ struct CipherCardDataView: View {
         self.cipher.cardData!.number = self.number
         self.cipher.cardData!.expMonth = Int(self.expMonth) ?? nil
         self.cipher.cardData!.expYear = Int(self.expYear) ?? nil
-        self.cipher.cardData!.code = self.code
-        self.cipher.cardData!.notes = self.notes
+        self.cipher.cardData!.code = self.code.emptyStringToNil()
+        self.cipher.cardData!.notes = self.notes.emptyStringToNil()
         
         self.save(self.cipher)
     }

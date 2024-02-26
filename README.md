@@ -1,9 +1,11 @@
 # LibrePass-iOS
 
-If the app crashed after update, try completely reinstalling app with erasing data
+LibrePass client for iOS. Written in SwiftUI.
 
-### TODO:
-- 2FA
+![Vault Screenshot](./readme/VaultScreenshot.png)
+
+### Update issues
+If app crashes after update, you probably need to clear vault unfortunately.
 
 ### Used libraries:
 - SwiftUI
