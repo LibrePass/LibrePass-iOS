@@ -2,7 +2,7 @@
 
 LibrePass client for iOS. Written in SwiftUI.
 
-![Vault Screenshot](./readme/VaultScreenshot.png)
+<img src="./readme/VaultScreenshot.png" alt="Vault screenshot" height="600">
 
 ### Update issues
 If app crashes after update, you probably need to clear vault unfortunately.
