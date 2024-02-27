@@ -38,7 +38,7 @@ struct MainWindow: View {
             } else {
                 NavigationView {
                     List {
-                        NavigationLink(destination: LibrePassLoginWindow(lClient: $lClient, loggedIn: $loggedIn)) {
+                        NavigationLink(destination: LibrePassLoginWindow(lClient: $lClient, loggedIn: $loggedIn, localLogIn: $localLogIn)) {
                             Text("Log in")
                         }
                         NavigationLink(destination: LibrePassRegistrationWindow(lClient: $lClient)) {
@@ -78,6 +78,7 @@ struct MainWindow: View {
                 Text("Copyright © 2024 LibrePass Team")
                 Text("LibrePass server: Medzik (Oskar) and contributors")
                 Text("LibrePass app for iOS: Zapomnij (Jacek)")
+                Text("App is licensed under GPL v3 license")
                 
                 Link("See on Github", destination: URL(string: "https://github.com/LibrePass")!)
                     .padding()

@@ -57,6 +57,15 @@ struct LibrePassManagerWindow: View {
                                 .foregroundStyle(Color.red)
                             
                         }
+                        
+                        Button(action: {
+                            self.lClient.unAuth()
+                            self.loggedIn = false
+                        }) {
+                            Image(systemName: "lock")
+                                .foregroundColor(Color.yellow)
+                        }
+                        
                         Button(action: {
                             self.refreshIndicator = true
                         }) {
@@ -70,16 +79,6 @@ struct LibrePassManagerWindow: View {
                         }
                     }
                 }
-            }
-        }
-        
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now()) {
-                while !self.loggedIn {
-                    
-                }
-                
-                self.refreshIndicator = true
             }
         }
         
@@ -119,7 +118,9 @@ struct LibrePassManagerWindow: View {
     }
     
     func syncVault() throws {
-        try self.lClient.syncVault()
+        if networkMonitor.isConnected {
+            try self.lClient.syncVault()
+        }
     }
     
     func deleteCiphers() throws {

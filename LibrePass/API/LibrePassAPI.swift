@@ -153,7 +153,7 @@ struct LibrePassClient {
         self.loginData = nil
         self.sharedKey = nil
         self.credentialsDatabase = nil
-        self.vault.vault = []
+        self.vault = LibrePassDecryptedVault(lastSync: 0)
     }
     
     mutating func fetchCiphers() throws {
@@ -215,6 +215,14 @@ struct LibrePassClient {
                 newVaultToSync.append(false)
             }
             
+            for index in stride(from: self.vault.idstoDelete.count - 1, through: 0, by: -1) {
+                if let _ = try? self.delete(id: self.vault.idstoDelete[index]) {
+                    if let _ = try? self.vault.remove(id: self.vault.idstoDelete[index], save: true) {
+                        self.vault.idstoDelete.remove(at: index)
+                    }
+                }
+            }
+            
             for encCipher in updated.ciphers {
                 if self.vault.vault.firstIndex(where: { cipher in encCipher.id == cipher.id }) == nil {
                     newVault.append(try LibrePassCipher(encCipher: encCipher, key: self.sharedKey!))
@@ -251,11 +259,11 @@ struct LibrePassClient {
     mutating func delete(id: String) throws {
         if networkMonitor.isConnected {
             _ = try self.client.request(path: "/api/cipher/" + id, body: nil, method: "DELETE")
-            
-            try self.vault.remove(id: id, save: true)
         } else {
-            throw LibrePassApiErrors.WithMessage(message: "Offline deletion is unsupported")
+            self.vault.idstoDelete.append(id)
         }
+        
+        try self.vault.remove(id: id, save: true)
     }
     
     func generateId() -> String {

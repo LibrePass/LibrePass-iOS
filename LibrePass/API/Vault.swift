@@ -11,6 +11,7 @@ import CryptoKit
 struct LibrePassEncryptedVault: Codable {
     var vault: [LibrePassEncryptedCipher] = []
     var toSync: [Bool] = []
+    var idsToDelete: [String] = []
     var lastSync: Int64
     
     static func loadVault() throws -> Self {
@@ -26,7 +27,7 @@ struct LibrePassEncryptedVault: Codable {
     }
     
     func decryptVault(key: SymmetricKey) throws -> LibrePassDecryptedVault {
-        var ciphers: LibrePassDecryptedVault = LibrePassDecryptedVault(toSync: self.toSync, lastSync: self.lastSync, key: key)
+        var ciphers: LibrePassDecryptedVault = LibrePassDecryptedVault(toSync: self.toSync, idstoDelete: self.idsToDelete, lastSync: self.lastSync, key: key)
         for (i, encCipher) in self.vault.enumerated() {
             try ciphers.addOrReplace(cipher: try LibrePassCipher(encCipher: encCipher, key: key), toSync: self.toSync[i], save: false)
         }
@@ -42,6 +43,7 @@ struct LibrePassEncryptedVault: Codable {
 struct LibrePassDecryptedVault {
     var vault: [LibrePassCipher] = []
     var toSync: [Bool] = []
+    var idstoDelete: [String] = []
     var lastSync: Int64
     var key: SymmetricKey?
     
@@ -77,7 +79,7 @@ struct LibrePassDecryptedVault {
     }
     
     func encryptVault() throws -> LibrePassEncryptedVault {
-        var encCiphers: LibrePassEncryptedVault = LibrePassEncryptedVault(toSync: self.toSync, lastSync: self.lastSync)
+        var encCiphers: LibrePassEncryptedVault = LibrePassEncryptedVault(toSync: self.toSync, idsToDelete: self.idstoDelete, lastSync: self.lastSync)
         for cipher in self.vault {
             encCiphers.vault.append(try LibrePassEncryptedCipher(cipher: cipher, key: self.key!))
         }

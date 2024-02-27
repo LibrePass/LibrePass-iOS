@@ -15,6 +15,7 @@ struct LibrePassLoginWindow: View {
     @State private var apiServer = "https://api.librepass.org"
     
     @Binding var loggedIn: Bool
+    @Binding var localLogIn: Bool
     
     var body: some View {
         List {
@@ -42,5 +43,6 @@ struct LibrePassLoginWindow: View {
         try lClient.login(email: self.email, password: self.password)
         try self.lClient.fetchCiphers()
         self.loggedIn = true
+        self.localLogIn = true
     }
 }

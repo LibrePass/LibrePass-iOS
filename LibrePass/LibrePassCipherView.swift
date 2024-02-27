@@ -70,7 +70,7 @@ struct CipherLoginDataView: View {
             }
             
             Section(header: Text("Notes")) {
-                TextField("Notes", text: self.$notes)
+                TextField("Notes", text: self.$notes, axis: .vertical)
             }
             
             Section {
@@ -107,8 +107,8 @@ struct CipherSecureNoteView: View {
     
     var body: some View {
         List {
-            TextFieldWithCopyButton(text: "Title", textBind: self.$title)
-            TextFieldWithCopyButton(text: "Note", textBind: self.$note)
+            TextField("Title", text: self.$title)
+            TextField("Note", text: self.$note, axis: .vertical)
             
             ButtonWithSpinningWheel(text: "Save", task: self.saveCipher)
         }
@@ -151,7 +151,7 @@ struct CipherCardDataView: View {
             }
             
             Section(header: Text("Notes")) {
-                TextFieldWithCopyButton(text: "Notes", textBind: self.$notes)
+                TextField("Note", text: self.$notes, axis: .vertical)
             }
             
             Section {

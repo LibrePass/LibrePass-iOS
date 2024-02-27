@@ -24,26 +24,26 @@ struct LibrePassLocalLogin: View {
                 ButtonWithSpinningWheel(text: "Unlock vault", task: self.login)
             }
             
-            Section(header: Text("If you're encountering crashes after update, try clearing local saved Vault. WARNING! THIS WILL DELETE VAULT SAVED ON THE DISK")) {
+            Section(header: Text("WARNING! THIS WILL DELETE VAULT SAVED ON THE DISK, but can fix crashes")) {
                 ButtonWithSpinningWheel(text: "Clear vault", task: self.clearVault, color: Color.red)
             }
         }
     }
     
     func clearVault() throws {
-        self.errorString = " "
-        
-        let credentials = try LibrePassCredentialsDatabase.load()
-        self.lClient = try LibrePassClient(credentials: credentials, password: self.password)
-        
-        try self.lClient.fetchCiphers()
-        
-        self.lClient.unAuth()
+        if networkMonitor.isConnected {
+            let credentials = try LibrePassCredentialsDatabase.load()
+            self.lClient = try LibrePassClient(credentials: credentials, password: self.password)
+            
+            try self.lClient.fetchCiphers()
+            
+            self.lClient.unAuth()
+        } else {
+            throw LibrePassApiErrors.WithMessage(message: "Offline clearing vault can't be done")
+        }
     }
     
     func login() throws {
-        self.errorString = " "
-        
         let credentials = try LibrePassCredentialsDatabase.load()
         self.lClient = try LibrePassClient(credentials: credentials, password: self.password)
         try self.lClient.syncVault()
