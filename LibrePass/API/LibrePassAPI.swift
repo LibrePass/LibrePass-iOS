@@ -98,42 +98,32 @@ struct LibrePassClient {
             var sharedKey: String
         }
         
-        do {
-            let preLogin = try self.preLogin(email: email)
-            
-            let (privateKeyData, _, sharedKeyData) = try self.getKeys(email: email, password: password, argon2options: preLogin)
-            
-            let encoder = JSONEncoder()
-            let loginRequestData = LoginRequestBody(email: email, sharedKey: dataToHexString(data: sharedKeyData))
-            let loginRequestBody = try encoder.encode(loginRequestData)
-            
-            let loginResponse = try self.client.request(path: "/api/auth/oauth?grantType=login", body: loginRequestBody, method: "POST")
-            
-            let decoder = JSONDecoder()
-            self.loginData = try decoder.decode(LoginData.self, from: loginResponse)
-            self.client.accessToken = self.loginData!.apiKey
-            
-            let privateKey = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: privateKeyData)
-            let sharedKeySerialized = try privateKey.sharedSecretFromKeyAgreement(with: privateKey.publicKey).withUnsafeBytes {
-                return Data(Array($0))
-            }
-            self.sharedKey = SymmetricKey(data: sharedKeySerialized)
-            
-            let privateKeySerialized = privateKey.publicKey.rawRepresentation.withUnsafeBytes {
-                return Data(Array($0))
-            }
-            
-            self.credentialsDatabase = LibrePassCredentialsDatabase(userId: self.loginData!.userId, email: email, apiUrl: self.client.apiUrl, accessToken: self.client.accessToken!, publicKey: dataToHexString(data: privateKeySerialized), argon2idParams: preLogin)
-            try self.credentialsDatabase!.save()
-        } catch ApiClientErrors.StatusCodeNot200(let statusCode) {
-            if statusCode == 400 || statusCode == 401 {
-                throw LibrePassApiErrors.WithMessage(message: "Invalid credentials")
-            } else {
-                throw LibrePassApiErrors.WithMessage(message: "Http error " + statusCode.formatted())
-            }
-        } catch ApiClientErrors.UnknownResponse {
-            throw LibrePassApiErrors.WithMessage(message: "Unknown error")
+        let preLogin = try self.preLogin(email: email)
+        
+        let (privateKeyData, _, sharedKeyData) = try self.getKeys(email: email, password: password, argon2options: preLogin)
+        
+        let encoder = JSONEncoder()
+        let loginRequestData = LoginRequestBody(email: email, sharedKey: dataToHexString(data: sharedKeyData))
+        let loginRequestBody = try encoder.encode(loginRequestData)
+        
+        let loginResponse = try self.client.request(path: "/api/auth/oauth?grantType=login", body: loginRequestBody, method: "POST")
+        
+        let decoder = JSONDecoder()
+        self.loginData = try decoder.decode(LoginData.self, from: loginResponse)
+        self.client.accessToken = self.loginData!.apiKey
+        
+        let privateKey = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: privateKeyData)
+        let sharedKeySerialized = try privateKey.sharedSecretFromKeyAgreement(with: privateKey.publicKey).withUnsafeBytes {
+            return Data(Array($0))
         }
+        self.sharedKey = SymmetricKey(data: sharedKeySerialized)
+        
+        let privateKeySerialized = privateKey.publicKey.rawRepresentation.withUnsafeBytes {
+            return Data(Array($0))
+        }
+            
+        self.credentialsDatabase = LibrePassCredentialsDatabase(userId: self.loginData!.userId, email: email, apiUrl: self.client.apiUrl, accessToken: self.client.accessToken!, publicKey: dataToHexString(data: privateKeySerialized), argon2idParams: preLogin)
+        try self.credentialsDatabase!.save()
     }
     
     mutating func replaceApiClient(apiUrl: String) {
@@ -264,6 +254,65 @@ struct LibrePassClient {
         }
         
         try self.vault.remove(id: id, save: true)
+    }
+    
+    mutating func updateCredentials(email: String, password: String, passwordHint: String, oldSharedKey: String) throws {
+        struct CompactCipher: Codable {
+            var id: String
+            var data: String
+        }
+        
+        struct LibrePassChangeEmailRequest: Codable {
+            var newEmail: String
+            var oldSharedKey: String
+            var newPublicKey: String
+            var newSharedKey: String
+            var ciphers: [CompactCipher]
+        }
+        
+        struct LibrePassChangePasswordRequest: Codable {
+            var oldSharedKey: String
+            var newPublicKey: String
+            var newSharedKey: String
+            var passwordHint: String
+            var parallelism: Int
+            var memory: Int
+            var iterations: Int
+            var ciphers: [CompactCipher]
+        }
+        
+        let (newPrivateData, newPublicData, newSharedData) = try self.getKeys(email: email, password: password, argon2options: self.credentialsDatabase!.argon2idParams)
+        
+        let vaultEncryptionKey = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: newPrivateData).sharedSecretFromKeyAgreement(with: try Curve25519.KeyAgreement.PublicKey(rawRepresentation: newPublicData)).withUnsafeBytes {
+            return Data(Array($0))
+        }
+        
+        var newVault = self.vault
+        newVault.key = SymmetricKey(data: vaultEncryptionKey)
+        
+        var encryptedVault = try newVault.encryptVault()
+        var compactCiphers: [CompactCipher] = []
+        for j in encryptedVault.vault {
+            compactCiphers.append(CompactCipher(id: j.id, data: j.protectedData))
+        }
+        
+        var requestBody: Data
+        var path: String
+        if email != self.credentialsDatabase!.email {
+            let requestStruct = LibrePassChangeEmailRequest(newEmail: email, oldSharedKey: oldSharedKey, newPublicKey: dataToHexString(data: newPublicData), newSharedKey: dataToHexString(data: newSharedData), ciphers: compactCiphers)
+            
+            requestBody = try JSONEncoder().encode(requestStruct)
+            path = "/api/user/email"
+        } else if dataToHexString(data: newSharedData) != oldSharedKey {
+            let requestStruct = LibrePassChangePasswordRequest(oldSharedKey: oldSharedKey, newPublicKey: dataToHexString(data: newPublicData), newSharedKey: dataToHexString(data: newSharedData), passwordHint: passwordHint, parallelism: self.credentialsDatabase!.argon2idParams.parallelism, memory: self.credentialsDatabase!.argon2idParams.memory, iterations: self.credentialsDatabase!.argon2idParams.iterations, ciphers: compactCiphers)
+            
+            requestBody = try JSONEncoder().encode(requestStruct)
+            path = "/api/user/password"
+        } else {
+            throw LibrePassApiErrors.WithMessage(message: "Nothing is to be changed")
+        }
+        
+        _ = try self.client.request(path: path, body: requestBody, method: "PATCH")
     }
     
     func generateId() -> String {

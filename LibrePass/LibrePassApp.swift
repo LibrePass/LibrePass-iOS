@@ -20,8 +20,6 @@ struct LibrePassApp: App {
 var networkMonitor = NetworkMonitor()
 
 struct MainWindow: View {
-    @Environment(\.scenePhase) private var scenePhase
-    
     @State var lClient: LibrePassClient = LibrePassClient(apiUrl: "")
     
     @State var localLogIn = false
@@ -34,7 +32,7 @@ struct MainWindow: View {
             if self.loggedIn {
                 LibrePassManagerWindow(lClient: $lClient, loggedIn: $loggedIn, locallyLoggedIn: $localLogIn)
             } else if self.localLogIn {
-                LibrePassLocalLogin(lClient: $lClient, loggedIn: $loggedIn)
+                LibrePassLocalLogin(lClient: $lClient, loggedIn: $loggedIn, localLogIn: $localLogIn)
             } else {
                 NavigationView {
                     List {
@@ -58,13 +56,6 @@ struct MainWindow: View {
         
         .onAppear {
             self.localLogIn = LibrePassCredentialsDatabase.isLocallyLoggedIn()
-        }
-        
-        .onChange(of: scenePhase) { (phase) in
-            if phase == .background {
-                lClient.unAuth()
-                self.loggedIn = false
-            }
         }
         
         .sheet(isPresented: self.$showAbout) {

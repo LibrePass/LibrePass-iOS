@@ -33,7 +33,11 @@ class ApiClient {
                 if response.statusCode == 200 {
                     responseBody = data ?? Data()
                 } else if response.statusCode < 200 || response.statusCode >= 300 {
-                    errorToReturn = ApiClientErrors.StatusCodeNot200(statusCode: response.statusCode)
+                    if let apiErrorData = try? JSONDecoder().decode(ApiErrorData.self, from: data ?? Data()) {
+                        errorToReturn = ApiClientErrors.StatusCodeNot200(statusCode: response.statusCode, body: apiErrorData)
+                    } else {
+                        errorToReturn = ApiClientErrors.UnknownResponse
+                    }
                 }
             } else {
                 errorToReturn = ApiClientErrors.UnknownResponse
@@ -50,9 +54,14 @@ class ApiClient {
         
         return responseBody
     }
+    
+    struct ApiErrorData: Codable {
+        var error: String
+        var status: Int
+    }
 }
 
 enum ApiClientErrors: Error {
-    case StatusCodeNot200(statusCode: Int)
+    case StatusCodeNot200(statusCode: Int, body: ApiClient.ApiErrorData)
     case UnknownResponse
 }

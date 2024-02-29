@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3975184DC26DCD2D852A7C08 /* Pods_LibrePass.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A927B022513678BA42B54FCF /* Pods_LibrePass.framework */; };
+		B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */; };
+		B25257BF2B91341D0028ABF3 /* vaultScreenshot.png in Resources */ = {isa = PBXBuildFile; fileRef = B25257BE2B91341D0028ABF3 /* vaultScreenshot.png */; };
 		B253F1D72B83942B00D048F9 /* LibrePassCipherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */; };
 		B253F1D82B83942B00D048F9 /* LibrePassLocalLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */; };
 		B253F1D92B83942B00D048F9 /* LibrePassLoginWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1CE2B83942B00D048F9 /* LibrePassLoginWindow.swift */; };
@@ -27,12 +29,13 @@
 		B2D91A1D2B8393C70004561A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2D91A1C2B8393C70004561A /* Assets.xcassets */; };
 		B2D91A202B8393C70004561A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2D91A1F2B8393C70004561A /* Preview Assets.xcassets */; };
 		B2DD90712B8D10D4003D84B7 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DD90702B8D10D4003D84B7 /* NetworkMonitor.swift */; };
-		B2DD90742B8D3F42003D84B7 /* VaultScreenshot.png in Resources */ = {isa = PBXBuildFile; fileRef = B2DD90732B8D3F42003D84B7 /* VaultScreenshot.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2816A09CADE280F72E52A29A /* Pods-LibrePass.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.release.xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.release.xcconfig"; sourceTree = "<group>"; };
 		A927B022513678BA42B54FCF /* Pods_LibrePass.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibrePass.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrePassAccountSettings.swift; sourceTree = "<group>"; };
+		B25257BE2B91341D0028ABF3 /* vaultScreenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vaultScreenshot.png; sourceTree = "<group>"; };
 		B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassCipherView.swift; sourceTree = "<group>"; };
 		B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassLocalLogin.swift; sourceTree = "<group>"; };
 		B253F1CE2B83942B00D048F9 /* LibrePassLoginWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassLoginWindow.swift; sourceTree = "<group>"; };
@@ -55,7 +58,6 @@
 		B2D91A1C2B8393C70004561A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2D91A1F2B8393C70004561A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B2DD90702B8D10D4003D84B7 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		B2DD90732B8D3F42003D84B7 /* VaultScreenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VaultScreenshot.png; sourceTree = "<group>"; };
 		F596AB355AB5D89D17A58912 /* Pods-LibrePass.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.debug.xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -125,6 +127,7 @@
 				B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */,
 				B253F1CF2B83942B00D048F9 /* LibrePassManagerWindow.swift */,
 				B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */,
+				B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */,
 				B2DD90702B8D10D4003D84B7 /* NetworkMonitor.swift */,
 				B28E061F2B8BBD1900F48661 /* Utils.swift */,
 				B253F1E22B8394EE00D048F9 /* LibrePass-Bridging-Header.h */,
@@ -145,7 +148,7 @@
 		B2DD90722B8D3F0E003D84B7 /* readme */ = {
 			isa = PBXGroup;
 			children = (
-				B2DD90732B8D3F42003D84B7 /* VaultScreenshot.png */,
+				B25257BE2B91341D0028ABF3 /* vaultScreenshot.png */,
 			);
 			path = readme;
 			sourceTree = "<group>";
@@ -224,7 +227,7 @@
 				B2D91A202B8393C70004561A /* Preview Assets.xcassets in Resources */,
 				B253F1E62B83976900D048F9 /* README.md in Resources */,
 				B2D91A1D2B8393C70004561A /* Assets.xcassets in Resources */,
-				B2DD90742B8D3F42003D84B7 /* VaultScreenshot.png in Resources */,
+				B25257BF2B91341D0028ABF3 /* vaultScreenshot.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +292,7 @@
 				B253F1DD2B83942B00D048F9 /* LibrePassApp.swift in Sources */,
 				B28E06202B8BBD1900F48661 /* Utils.swift in Sources */,
 				B253F1D82B83942B00D048F9 /* LibrePassLocalLogin.swift in Sources */,
+				B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */,
 				B253F1E12B83942B00D048F9 /* LibrePassEncryptedCipher.swift in Sources */,
 				B253F1DB2B83942B00D048F9 /* CredentialsDatabase.swift in Sources */,
 				B253F1DA2B83942B00D048F9 /* LibrePassManagerWindow.swift in Sources */,
@@ -441,7 +445,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -480,7 +484,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

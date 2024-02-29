@@ -26,6 +26,9 @@ struct SpinningWheel: View {
                         } catch LibrePassApiErrors.WithMessage(let message) {
                             self.errorString = message
                             self.showAlert = true
+                        } catch ApiClientErrors.StatusCodeNot200(let statusCode, let body) {
+                            self.errorString = String(statusCode) + ": " + body.error
+                            self.showAlert = true
                         } catch {
                             self.errorString = error.localizedDescription
                             self.showAlert = true

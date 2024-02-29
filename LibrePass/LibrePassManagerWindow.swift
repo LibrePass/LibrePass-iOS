@@ -11,7 +11,6 @@ struct LibrePassManagerWindow: View {
     @State private var errorString: String = " "
     @State private var showAlert = false
     @State private var new = false
-    @State private var logOut = false
     
     @Binding var lClient: LibrePassClient
     
@@ -22,6 +21,8 @@ struct LibrePassManagerWindow: View {
     @State var deletionIndicator: Bool = false
     
     @State var toDelete: IndexSet = []
+    
+    @State var accountSettings: Bool = false
     
     var body: some View {
         NavigationView {
@@ -51,31 +52,35 @@ struct LibrePassManagerWindow: View {
                     
                     if !self.refreshIndicator && !self.deletionIndicator {
                         Button(action: {
-                            self.logOut.toggle()
-                        }) {
-                            Image(systemName: "arrow.left")
-                                .foregroundStyle(Color.red)
-                            
-                        }
-                        
-                        Button(action: {
-                            self.lClient.unAuth()
-                            self.loggedIn = false
-                        }) {
-                            Image(systemName: "lock")
-                                .foregroundColor(Color.yellow)
-                        }
-                        
-                        Button(action: {
                             self.refreshIndicator = true
                         }) {
                             Image(systemName: "arrow.clockwise")
                         }
                         
-                        Button(action: {
-                            self.new.toggle()
-                        }) {
-                            Image(systemName: "plus")
+                        Menu {
+                            Button(action: {
+                                self.accountSettings = true
+                            }) {
+                                Image(systemName: "gearshape")
+                                Text("Account settings")
+                            }
+                            
+                            Button(action: {
+                                self.lClient.unAuth()
+                                self.loggedIn = false
+                            }) {
+                                Image(systemName: "lock")
+                                Text("Lock vault")
+                            }
+                            
+                            Button(action: {
+                                self.new.toggle()
+                            }) {
+                                Image(systemName: "plus")
+                                Text("New cipher")
+                            }
+                        } label: {
+                            Image(systemName: ("ellipsis.circle"))
                         }
                     }
                 }
@@ -105,15 +110,8 @@ struct LibrePassManagerWindow: View {
             Button("Cancel", role: .cancel) {}
         }
         
-        .alert("Are you sure you to log out?", isPresented: self.$logOut) {
-            Button("Yes", role: .destructive) {
-                self.lClient.logOut()
-                
-                self.locallyLoggedIn = false
-                self.loggedIn = false
-            }
-            
-            Button("No", role: .cancel) {}
+        .sheet(isPresented: self.$accountSettings) {
+            LibrePassAccountSettings(lClient: self.$lClient, locallyLoggedIn: self.$locallyLoggedIn, loggedIn: self.$loggedIn)
         }
     }
     
@@ -135,8 +133,8 @@ struct LibrePassManagerWindow: View {
         do {
             try self.lClient.put(cipher: cipher)
             try self.syncVault()
-        } catch ApiClientErrors.StatusCodeNot200(let statusCode){
-            self.errorString = String(statusCode)
+        } catch ApiClientErrors.StatusCodeNot200(let statusCode, let body){
+            self.errorString = String(statusCode) + ": " + body.error
             self.showAlert = true
         } catch {
             self.errorString = error.localizedDescription

@@ -10,11 +10,13 @@ import SwiftUI
 struct LibrePassLocalLogin: View {
     @Binding var lClient: LibrePassClient
     @Binding var loggedIn: Bool
+    @Binding var localLogIn: Bool
     
     @State private var password = String()
     
     @State private var showAlert = false
     @State private var errorString = " "
+    @State private var tokenExpired = false
 
     var body: some View {
         List {
@@ -26,6 +28,12 @@ struct LibrePassLocalLogin: View {
             
             Section(header: Text("WARNING! THIS WILL DELETE VAULT SAVED ON THE DISK, but can fix crashes")) {
                 ButtonWithSpinningWheel(text: "Clear vault", task: self.clearVault, color: Color.red)
+            }
+        }
+        
+        .alert("Token has expired. You must relogin to use LibrePass", isPresented: self.$tokenExpired) {
+            Button("OK", role: .cancel) {
+                self.localLogIn = false
             }
         }
     }
@@ -46,7 +54,21 @@ struct LibrePassLocalLogin: View {
     func login() throws {
         let credentials = try LibrePassCredentialsDatabase.load()
         self.lClient = try LibrePassClient(credentials: credentials, password: self.password)
-        try self.lClient.syncVault()
+        do {
+            try self.lClient.syncVault()
+        } catch ApiClientErrors.StatusCodeNot200(let statusCode, let body) {
+            self.lClient.unAuth()
+            if statusCode == 401 && body.error == "InvalidToken" {
+                self.lClient.logOut()
+                self.tokenExpired = true
+                return
+            } else {
+                throw ApiClientErrors.StatusCodeNot200(statusCode: statusCode, body: body)
+            }
+        } catch {
+            self.lClient.unAuth()
+            throw error
+        }
             
         self.loggedIn = true
     }
