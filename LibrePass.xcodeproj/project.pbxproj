@@ -24,6 +24,7 @@
 		B253F1E52B83976900D048F9 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B253F1E32B83976900D048F9 /* LICENSE */; };
 		B253F1E62B83976900D048F9 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B253F1E42B83976900D048F9 /* README.md */; };
 		B2780F062B8A43C200835EE3 /* LibrePassRegistrationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2780F052B8A43C200835EE3 /* LibrePassRegistrationWindow.swift */; };
+		B28808912B9254E300A526C6 /* PasswordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28808902B9254E300A526C6 /* PasswordGenerator.swift */; };
 		B28E06202B8BBD1900F48661 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28E061F2B8BBD1900F48661 /* Utils.swift */; };
 		B2D4447B2B87D0DF0031A685 /* Vault.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D4447A2B87D0DF0031A685 /* Vault.swift */; };
 		B2D91A1D2B8393C70004561A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2D91A1C2B8393C70004561A /* Assets.xcassets */; };
@@ -51,6 +52,7 @@
 		B253F1E32B83976900D048F9 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B253F1E42B83976900D048F9 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B2780F052B8A43C200835EE3 /* LibrePassRegistrationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrePassRegistrationWindow.swift; sourceTree = "<group>"; };
+		B28808902B9254E300A526C6 /* PasswordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGenerator.swift; sourceTree = "<group>"; };
 		B28DFDBD2B8B6DC1007D5837 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		B28E061F2B8BBD1900F48661 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		B2D4447A2B87D0DF0031A685 /* Vault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vault.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				B2D4447A2B87D0DF0031A685 /* Vault.swift */,
 				B253F1D42B83942B00D048F9 /* Crypto.swift */,
 				B253F1D32B83942B00D048F9 /* ApiClient.swift */,
+				B28808902B9254E300A526C6 /* PasswordGenerator.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B253F1E02B83942B00D048F9 /* LibrePassCipher.swift in Sources */,
+				B28808912B9254E300A526C6 /* PasswordGenerator.swift in Sources */,
 				B2DD90712B8D10D4003D84B7 /* NetworkMonitor.swift in Sources */,
 				B253F1DC2B83942B00D048F9 /* LibrePassAPI.swift in Sources */,
 				B253F1D92B83942B00D048F9 /* LibrePassLoginWindow.swift in Sources */,
@@ -445,7 +449,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -484,7 +488,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

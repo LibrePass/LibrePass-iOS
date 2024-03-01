@@ -315,6 +315,24 @@ struct LibrePassClient {
         _ = try self.client.request(path: path, body: requestBody, method: "PATCH")
     }
     
+    func deleteAccount(password: String) throws {
+        struct LibrePassDeleteAccountRequest: Codable {
+            var sharedKey: String
+            var code: String
+        }
+        
+        let (oldPrivateData, oldPublicData, oldSharedData) = try self.getKeys(email: self.credentialsDatabase!.email, password: password, argon2options: self.credentialsDatabase!.argon2idParams)
+        
+        if dataToHexString(data: oldPublicData) != self.credentialsDatabase!.publicKey {
+            throw LibrePassApiErrors.WithMessage(message: "Invalid credentials")
+        }
+        
+        let request = LibrePassDeleteAccountRequest(sharedKey: dataToHexString(data: oldSharedData), code: "")
+        let requestBody = try JSONEncoder().encode(request)
+        
+        _ = try self.client.request(path: "/api/user/delete", body: requestBody, method: "DELETE")
+    }
+    
     func generateId() -> String {
         var uuid = UUID().uuidString.lowercased()
         while self.vault.vault.firstIndex(where: { cipher in cipher.id == uuid }) != nil {

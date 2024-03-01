@@ -20,7 +20,6 @@ struct LibrePassAccountSettings: View {
     @State var newPasswordHint = String()
     
     @State var done = false
-    @State var logOut = false
     
     var body: some View {
         List {
@@ -41,22 +40,14 @@ struct LibrePassAccountSettings: View {
                 SecureField("Current password", text: self.$password)
                     .autocapitalization(.none)
                 ButtonWithSpinningWheel(text: "Update credentials", task: self.updateCredentials)
+                ButtonWithSpinningWheel(text: "Delete account", task: self.deleteAccount, color: Color.red)
             }
             
             Section {
                 Button("Log out", role: .destructive) {
-                    self.logOut = true
+                    self.logOut()
                 }
             }
-        }
-        
-        .alert("Are you sure you want to log out?", isPresented: self.$logOut) {
-            Button("Yes", role: .destructive) {
-                self.lClient.logOut()
-                self.locallyLoggedIn = false
-                self.loggedIn = false
-            }
-            Button("No", role: .cancel) {}
         }
         
         .alert("Operation is finished. You'll be logged out. If you've changed email address, check your mailbox and verify email address", isPresented: self.$done) {
@@ -69,6 +60,17 @@ struct LibrePassAccountSettings: View {
         .onAppear {
             self.email = self.lClient.credentialsDatabase!.email
         }
+    }
+    
+    func deleteAccount() throws {
+        try self.lClient.deleteAccount(password: self.password)
+        self.logOut()
+    }
+    
+    func logOut() {
+        self.locallyLoggedIn = false
+        self.loggedIn = false
+        self.lClient.logOut()
     }
     
     func updateCredentials() throws {

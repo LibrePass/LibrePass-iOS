@@ -46,12 +46,16 @@ struct CipherLoginDataView: View {
     @State var uris: [String] = []
     @State var notes = String()
     
+    @State var passwordLength = 0
+    @State var generatePasswordAlert = false
+    
     var body: some View {
         List {
             Section(header: Text("Login data")) {
                 TextField("Name", text: $name)
                 TextFieldWithCopyButton(text: "Username", textBind: self.$username)
                 SecureFieldWithCopyAndShowButton(text: "Password", textBind: self.$password)
+                Button("Generate random password") { self.generatePasswordAlert = true }
             }
             
             Section(header: Text("URIs")) {
@@ -76,6 +80,17 @@ struct CipherLoginDataView: View {
             Section {
                 ButtonWithSpinningWheel(text: "Save", task: self.saveCipher)
             }
+        }
+        
+        .alert("Length of password (must be longer or equal to 8)", isPresented: self.$generatePasswordAlert) {
+            TextField("Length", value: self.$passwordLength, formatter: NumberFormatter())
+            Button("Generate") {
+                if let password = try? generatePassword(length: self.passwordLength) {
+                    self.password = password
+                }
+            }
+            
+            Button("Cancel", role: .cancel) {}
         }
         
         .onAppear {
