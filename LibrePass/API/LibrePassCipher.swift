@@ -83,7 +83,7 @@ class LibrePassCipher: Codable {
         var password: String?
         var passwordHistory: [PasswordHistory]?
         var uris: [String]?
-        var twoFactor: [String]?
+        var twoFactor: String?
         var notes: String?
         var fields: [CustomField]?
     }

@@ -11,3 +11,4 @@ If app crashes after update, you probably need to clear vault unfortunately.
 - SwiftUI
 - Apple CryptoKit
 - SignalArgon2
+- SwiftOTP

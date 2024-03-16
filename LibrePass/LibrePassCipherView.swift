@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftOTP
 
 struct CipherView: View {
     @Binding var lClient: LibrePassClient
@@ -45,9 +46,14 @@ struct CipherLoginDataView: View {
     @State var password = String()
     @State var uris: [String] = []
     @State var notes = String()
+    @State var twoFactorUri: String?
     
     @State var passwordLength = 0
     @State var generatePasswordAlert = false
+    
+    @State var oneTimePassword = ""
+    @State var timeLeft = 0
+    @State var editTwoFactor = false
     
     var body: some View {
         List {
@@ -70,6 +76,36 @@ struct CipherLoginDataView: View {
                 
                 Button("Add") {
                     self.uris.append("")
+                }
+            }
+            
+            Section(header: Text("Two factor")) {
+                if let _ = self.twoFactorUri {
+                    HStack {
+                        Text(self.oneTimePassword)
+                        Spacer()
+                        Text(String(self.timeLeft))
+                    }
+                    .onAppear {
+                        runAuthenticatorJob()
+                    }
+                    .onDisappear {
+                        stop = running
+                    }
+                    
+                    Button("Edit 2FA") {
+                        stop = running
+                        self.editTwoFactor = true
+                    }
+                    
+                    Button("Delete 2FA") {
+                        stop = running
+                        self.twoFactorUri = nil
+                    }
+                } else {
+                    Button("Set up 2FA") {
+                        self.editTwoFactor = true
+                    }
                 }
             }
             
@@ -99,6 +135,78 @@ struct CipherLoginDataView: View {
             self.password = self.cipher.loginData!.password ?? ""
             self.uris = self.cipher.loginData!.uris ?? []
             self.notes = self.cipher.loginData!.notes ?? ""
+            self.twoFactorUri = self.cipher.loginData!.twoFactor
+        }
+        
+        .sheet(isPresented: self.$editTwoFactor, onDismiss: {
+            runAuthenticatorJob()
+        }) {
+            List {
+                TextField("Secret", text: self.$twoFactorSecret)
+                Picker("Type", selection: self.$twoFactorType) {
+                    Text("TOTP").tag(OATHParams.OATHType.TOTP)
+                    Text("HOTP").tag(OATHParams.OATHType.HOTP)
+                }
+                TextField("Digits", value: self.$twoFactorDigits, formatter: NumberFormatter())
+                if self.twoFactorType == .TOTP {
+                    TextField("Period", value: self.$twoFactorPeriod, formatter: NumberFormatter())
+                } else {
+                    TextField("Counter", value: self.$twoFactorCounter, formatter: NumberFormatter())
+                }
+                
+                Button("Apply") {
+                    var str = "otpauth://" + self.twoFactorType.toString()
+                    str += "/randomlabel?secret=" + self.twoFactorSecret
+                    str += "&algorithm=" + self.twoFactorAlgorithm.toString()
+                    str += "&digits=" + String(self.twoFactorDigits)
+                    
+                    if self.twoFactorType == .TOTP {
+                        str += "&period=" + String(self.twoFactorPeriod)
+                    } else {
+                        str += "&counter=" + String(self.twoFactorCounter)
+                    }
+                    
+                    self.twoFactorUri = str
+                    
+                    self.editTwoFactor = false
+                }
+            }
+            .onAppear {
+                if let twoFactorUri = self.twoFactorUri {
+                    let params = OATHParams(uri: twoFactorUri)
+                    self.twoFactorType = params.type
+                    self.twoFactorAlgorithm = params.algorithm
+                    self.twoFactorSecret = base32Encode(params.secret)
+                    self.twoFactorDigits = params.digits
+                    self.twoFactorPeriod = params.period
+                    self.twoFactorCounter = params.counter
+                }
+            }
+        }
+    }
+    
+    @State var twoFactorType: OATHParams.OATHType = .TOTP
+    @State var twoFactorAlgorithm: SwiftOTP.OTPAlgorithm = .sha1
+    @State var twoFactorSecret = String()
+    @State var twoFactorDigits = 6
+    @State var twoFactorPeriod = 30
+    @State var twoFactorCounter = 0
+    
+    func runAuthenticatorJob() {
+        Task {
+            if let twoFactorUri = self.twoFactorUri {
+                let engine = OATHParams(uri: twoFactorUri)
+                switch engine.type {
+                case .TOTP:
+                    await engine.runTOTPCounter { oneTimePassword, timeLeft in
+                        self.oneTimePassword = oneTimePassword
+                        self.timeLeft = timeLeft
+                    }
+                    break
+                case .HOTP:
+                    break
+                }
+            }
         }
     }
     
@@ -108,6 +216,7 @@ struct CipherLoginDataView: View {
         self.cipher.loginData!.password = self.password.emptyStringToNil()
         self.cipher.loginData!.uris = self.uris
         self.cipher.loginData!.notes = self.notes.emptyStringToNil()
+        self.cipher.loginData!.twoFactor = self.twoFactorUri
         
         self.save(self.cipher)
     }

@@ -7,4 +7,5 @@ target 'LibrePass' do
 
   # Pods for LibrePass
   pod 'SignalArgon2'
+  pod 'SwiftOTP'
 end

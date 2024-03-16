@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3975184DC26DCD2D852A7C08 /* Pods_LibrePass.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A927B022513678BA42B54FCF /* Pods_LibrePass.framework */; };
+		B23D44F82BA62C6B00097960 /* OATH.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D44F72BA62C6B00097960 /* OATH.swift */; };
 		B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */; };
 		B25257BF2B91341D0028ABF3 /* vaultScreenshot.png in Resources */ = {isa = PBXBuildFile; fileRef = B25257BE2B91341D0028ABF3 /* vaultScreenshot.png */; };
 		B253F1D72B83942B00D048F9 /* LibrePassCipherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */; };
@@ -35,6 +36,7 @@
 /* Begin PBXFileReference section */
 		2816A09CADE280F72E52A29A /* Pods-LibrePass.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.release.xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.release.xcconfig"; sourceTree = "<group>"; };
 		A927B022513678BA42B54FCF /* Pods_LibrePass.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibrePass.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B23D44F72BA62C6B00097960 /* OATH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OATH.swift; sourceTree = "<group>"; };
 		B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrePassAccountSettings.swift; sourceTree = "<group>"; };
 		B25257BE2B91341D0028ABF3 /* vaultScreenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vaultScreenshot.png; sourceTree = "<group>"; };
 		B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassCipherView.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				B253F1D42B83942B00D048F9 /* Crypto.swift */,
 				B253F1D32B83942B00D048F9 /* ApiClient.swift */,
 				B28808902B9254E300A526C6 /* PasswordGenerator.swift */,
+				B23D44F72BA62C6B00097960 /* OATH.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 				B253F1DD2B83942B00D048F9 /* LibrePassApp.swift in Sources */,
 				B28E06202B8BBD1900F48661 /* Utils.swift in Sources */,
 				B253F1D82B83942B00D048F9 /* LibrePassLocalLogin.swift in Sources */,
+				B23D44F82BA62C6B00097960 /* OATH.swift in Sources */,
 				B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */,
 				B253F1E12B83942B00D048F9 /* LibrePassEncryptedCipher.swift in Sources */,
 				B253F1DB2B83942B00D048F9 /* CredentialsDatabase.swift in Sources */,
