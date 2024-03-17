@@ -63,7 +63,7 @@ struct OATHParams {
     var period: Int = 30
     var counter: Int = 0
     
-    init(uri: String) {
+    init(uri: String) throws {
         self.uri = uri
         
         if uri.starts(with: "otpauth://totp/") {
@@ -74,13 +74,16 @@ struct OATHParams {
         
         let uriSplit = uri.components(separatedBy: "?")[1].components(separatedBy: "&")
         
-        uriSplit.forEach { keyVal in
+        for keyVal in uriSplit {
             let split = keyVal.components(separatedBy: "=")
             let key = split[0], val = split[1]
             
             switch key {
             case "secret":
-                self.secret = Data(base32Decode(val)!)
+                guard let secret = base32Decode(val) else {
+                    throw LibrePassApiErrors.WithMessage(message: "Bad 2FA secret")
+                }
+                self.secret = Data(secret)
                 break
             case "algorithm":
                 self.algorithm = val.toOTPAlgorithm()

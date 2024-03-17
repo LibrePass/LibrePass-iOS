@@ -122,23 +122,27 @@ struct LibrePassManagerWindow: View {
     }
     
     func deleteCiphers() throws {
-        for index in self.toDelete {
-            try self.lClient.delete(id: self.lClient.vault.vault[index].id)
+        Task {
+            for index in self.toDelete {
+                try self.lClient.delete(id: self.lClient.vault.vault[index].id)
+            }
         }
     }
     
     func newCipher(type: LibrePassCipher.CipherType) {
-        let cipher = LibrePassCipher(id: lClient.generateId(), owner: lClient.credentialsDatabase!.userId, type: type)
-        
-        do {
-            try self.lClient.put(cipher: cipher)
-            try self.syncVault()
-        } catch ApiClientErrors.StatusCodeNot200(let statusCode, let body){
-            self.errorString = String(statusCode) + ": " + body.error
-            self.showAlert = true
-        } catch {
-            self.errorString = error.localizedDescription
-            self.showAlert = true
+        Task {
+            let cipher = LibrePassCipher(id: lClient.generateId(), owner: lClient.credentialsDatabase!.userId, type: type)
+            
+            do {
+                try self.lClient.put(cipher: cipher)
+                try self.syncVault()
+            } catch ApiClientErrors.StatusCodeNot200(let statusCode, let body){
+                self.errorString = String(statusCode) + ": " + body.error
+                self.showAlert = true
+            } catch {
+                self.errorString = error.localizedDescription
+                self.showAlert = true
+            }
         }
     }
 }

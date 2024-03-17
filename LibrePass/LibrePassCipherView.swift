@@ -82,6 +82,12 @@ struct CipherLoginDataView: View {
             Section(header: Text("Two factor")) {
                 if let _ = self.twoFactorUri {
                     HStack {
+                        Button(action: {
+                            UIPasteboard.general.string = self.oneTimePassword
+                        }, label: {
+                            Image(systemName: "doc.on.doc")
+                        })
+                        .buttonStyle(.plain)
                         Text(self.oneTimePassword)
                         Spacer()
                         Text(String(self.timeLeft))
@@ -101,6 +107,12 @@ struct CipherLoginDataView: View {
                     Button("Delete 2FA") {
                         stop = running
                         self.twoFactorUri = nil
+                    }
+                    
+                    .alert("Incorrect 2FA configuration", isPresented: self.$twoFactorError) {
+                        Button("OK", role: .cancel) {
+                            self.twoFactorUri = nil
+                        }
                     }
                 } else {
                     Button("Set up 2FA") {
@@ -142,44 +154,59 @@ struct CipherLoginDataView: View {
             runAuthenticatorJob()
         }) {
             List {
-                TextField("Secret", text: self.$twoFactorSecret)
-                Picker("Type", selection: self.$twoFactorType) {
-                    Text("TOTP").tag(OATHParams.OATHType.TOTP)
-                    Text("HOTP").tag(OATHParams.OATHType.HOTP)
-                }
-                TextField("Digits", value: self.$twoFactorDigits, formatter: NumberFormatter())
-                if self.twoFactorType == .TOTP {
-                    TextField("Period", value: self.$twoFactorPeriod, formatter: NumberFormatter())
-                } else {
-                    TextField("Counter", value: self.$twoFactorCounter, formatter: NumberFormatter())
-                }
-                
-                Button("Apply") {
-                    var str = "otpauth://" + self.twoFactorType.toString()
-                    str += "/randomlabel?secret=" + self.twoFactorSecret
-                    str += "&algorithm=" + self.twoFactorAlgorithm.toString()
-                    str += "&digits=" + String(self.twoFactorDigits)
-                    
+                Section(header: Text("Manual configuration")) {
+                    TextField("Secret", text: self.$twoFactorSecret)
+                    Picker("Type", selection: self.$twoFactorType) {
+                        Text("TOTP").tag(OATHParams.OATHType.TOTP)
+                    }
+                    TextField("Digits", value: self.$twoFactorDigits, formatter: NumberFormatter())
                     if self.twoFactorType == .TOTP {
-                        str += "&period=" + String(self.twoFactorPeriod)
+                        TextField("Period", value: self.$twoFactorPeriod, formatter: NumberFormatter())
                     } else {
-                        str += "&counter=" + String(self.twoFactorCounter)
+                        TextField("Counter", value: self.$twoFactorCounter, formatter: NumberFormatter())
                     }
                     
-                    self.twoFactorUri = str
-                    
-                    self.editTwoFactor = false
+                    Button("Apply") {
+                        let split = self.twoFactorSecret.components(separatedBy: " ")
+                        if split.count > 0 {
+                            self.twoFactorSecret = ""
+                            split.forEach {
+                                if $0 != "" {
+                                    self.twoFactorSecret += $0
+                                }
+                            }
+                        }
+                        
+                        var str = "otpauth://" + self.twoFactorType.toString()
+                        str += "/randomlabel?secret=" + self.twoFactorSecret
+                        str += "&algorithm=" + self.twoFactorAlgorithm.toString()
+                        str += "&digits=" + String(self.twoFactorDigits)
+                        
+                        if self.twoFactorType == .TOTP {
+                            str += "&period=" + String(self.twoFactorPeriod)
+                        } else {
+                            str += "&counter=" + String(self.twoFactorCounter)
+                        }
+                        
+                        self.twoFactorUri = str
+                        
+                        self.editTwoFactor = false
+                    }
                 }
             }
             .onAppear {
-                if let twoFactorUri = self.twoFactorUri {
-                    let params = OATHParams(uri: twoFactorUri)
-                    self.twoFactorType = params.type
-                    self.twoFactorAlgorithm = params.algorithm
-                    self.twoFactorSecret = base32Encode(params.secret)
-                    self.twoFactorDigits = params.digits
-                    self.twoFactorPeriod = params.period
-                    self.twoFactorCounter = params.counter
+                do {
+                    if let twoFactorUri = self.twoFactorUri {
+                        let params = try OATHParams(uri: twoFactorUri)
+                        self.twoFactorType = params.type
+                        self.twoFactorAlgorithm = params.algorithm
+                        self.twoFactorSecret = base32Encode(params.secret)
+                        self.twoFactorDigits = params.digits
+                        self.twoFactorPeriod = params.period
+                        self.twoFactorCounter = params.counter
+                    }
+                } catch {
+                    self.twoFactorError = true
                 }
             }
         }
@@ -191,21 +218,26 @@ struct CipherLoginDataView: View {
     @State var twoFactorDigits = 6
     @State var twoFactorPeriod = 30
     @State var twoFactorCounter = 0
+    @State var twoFactorError = false
     
     func runAuthenticatorJob() {
         Task {
-            if let twoFactorUri = self.twoFactorUri {
-                let engine = OATHParams(uri: twoFactorUri)
-                switch engine.type {
-                case .TOTP:
-                    await engine.runTOTPCounter { oneTimePassword, timeLeft in
-                        self.oneTimePassword = oneTimePassword
-                        self.timeLeft = timeLeft
+            do {
+                if let twoFactorUri = self.twoFactorUri {
+                    let engine = try OATHParams(uri: twoFactorUri)
+                    switch engine.type {
+                    case .TOTP:
+                        await engine.runTOTPCounter { oneTimePassword, timeLeft in
+                            self.oneTimePassword = oneTimePassword
+                            self.timeLeft = timeLeft
+                        }
+                        break
+                    case .HOTP:
+                        break
                     }
-                    break
-                case .HOTP:
-                    break
                 }
+            } catch {
+                self.twoFactorError = true
             }
         }
     }
@@ -351,40 +383,6 @@ struct CipherButton: View {
                 Text(self.cipher.cardData!.name)
                 Spacer()
             }
-        }
-    }
-}
-
-struct CipherDeleteButton: View {
-    @Environment(\.presentationMode) var presentationMode
-    
-    @Binding var lClient: LibrePassClient
-    var id: String
-    
-    @State var areYouSure = false
-    @State var errorString = String()
-    @State var showAlert = false
-    
-    var body: some View {
-        Button(action: {
-            self.areYouSure = true
-        }) {
-            Image(systemName: "trash")
-        }
-        .foregroundColor(Color.red)
-        
-        .alert("Are you sure you want to delete this cipher?", isPresented: $areYouSure) {
-            Button("Yes", role: .destructive) {
-                _ = try? lClient.delete(id: id)
-                
-                self.presentationMode.wrappedValue.dismiss()
-            }
-            
-            Button("No", role: .cancel) {}
-        }
-        
-        .alert(self.errorString, isPresented: $showAlert) {
-            Button("OK", role: .cancel) {}
         }
     }
 }
