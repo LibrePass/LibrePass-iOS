@@ -39,7 +39,7 @@ struct LibrePassLocalLogin: View {
     }
     
     func clearVault() throws {
-        if networkMonitor.isConnected {
+        if NetworkMonitor.shared.isConnected {
             let credentials = try LibrePassCredentialsDatabase.load()
             self.lClient = try LibrePassClient(credentials: credentials, password: self.password)
             

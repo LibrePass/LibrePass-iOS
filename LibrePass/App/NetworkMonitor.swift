@@ -9,6 +9,8 @@ import Foundation
 import Network
 
 class NetworkMonitor: ObservableObject {
+    static let shared = NetworkMonitor()
+
     private let monitor = NWPathMonitor()
     private let dispatchQueue = DispatchQueue(label: "Monitor")
     
