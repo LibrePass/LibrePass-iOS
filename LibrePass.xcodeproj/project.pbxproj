@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		176A30622BC1C103005C143E /* CustomEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176A30612BC1C103005C143E /* CustomEnvironment.swift */; };
 		3975184DC26DCD2D852A7C08 /* Pods_LibrePass.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A927B022513678BA42B54FCF /* Pods_LibrePass.framework */; };
 		B23D44F82BA62C6B00097960 /* OATH.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D44F72BA62C6B00097960 /* OATH.swift */; };
 		B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */; };
@@ -34,7 +35,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2816A09CADE280F72E52A29A /* Pods-LibrePass.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.release.xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.release.xcconfig"; sourceTree = "<group>"; };
+		176A30612BC1C103005C143E /* CustomEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEnvironment.swift; sourceTree = "<group>"; };
+		176A306A2BC1C8D8005C143E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		29FBE69442CBC35BD7E5388E /* Pods-LibrePass.debug(dev).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.debug(dev).xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.debug(dev).xcconfig"; sourceTree = "<group>"; };
+		7F00EDC76A8230916D3D0E6C /* Pods-LibrePass.release(dev).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.release(dev).xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.release(dev).xcconfig"; sourceTree = "<group>"; };
 		A927B022513678BA42B54FCF /* Pods_LibrePass.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibrePass.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B23D44F72BA62C6B00097960 /* OATH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OATH.swift; sourceTree = "<group>"; };
 		B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrePassAccountSettings.swift; sourceTree = "<group>"; };
@@ -62,7 +66,8 @@
 		B2D91A1C2B8393C70004561A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2D91A1F2B8393C70004561A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B2DD90702B8D10D4003D84B7 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		F596AB355AB5D89D17A58912 /* Pods-LibrePass.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.debug.xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.debug.xcconfig"; sourceTree = "<group>"; };
+		C8B00C4C0AD732FFFB50F596 /* Pods-LibrePass.debug(prod).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.debug(prod).xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.debug(prod).xcconfig"; sourceTree = "<group>"; };
+		D34431269757FABB868039F0 /* Pods-LibrePass.release(prod).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.release(prod).xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.release(prod).xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,19 +131,21 @@
 		B2D91A172B8393C60004561A /* LibrePass */ = {
 			isa = PBXGroup;
 			children = (
+				176A306A2BC1C8D8005C143E /* Info.plist */,
 				B2D444772B87CFF00031A685 /* API */,
-				B253F1D22B83942B00D048F9 /* LibrePassApp.swift */,
-				B2780F052B8A43C200835EE3 /* LibrePassRegistrationWindow.swift */,
-				B253F1CE2B83942B00D048F9 /* LibrePassLoginWindow.swift */,
-				B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */,
-				B253F1CF2B83942B00D048F9 /* LibrePassManagerWindow.swift */,
-				B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */,
-				B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */,
-				B2DD90702B8D10D4003D84B7 /* NetworkMonitor.swift */,
-				B28E061F2B8BBD1900F48661 /* Utils.swift */,
-				B253F1E22B8394EE00D048F9 /* LibrePass-Bridging-Header.h */,
 				B2D91A1C2B8393C70004561A /* Assets.xcassets */,
+				176A30612BC1C103005C143E /* CustomEnvironment.swift */,
+				B253F1E22B8394EE00D048F9 /* LibrePass-Bridging-Header.h */,
+				B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */,
+				B253F1D22B83942B00D048F9 /* LibrePassApp.swift */,
+				B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */,
+				B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */,
+				B253F1CE2B83942B00D048F9 /* LibrePassLoginWindow.swift */,
+				B253F1CF2B83942B00D048F9 /* LibrePassManagerWindow.swift */,
+				B2780F052B8A43C200835EE3 /* LibrePassRegistrationWindow.swift */,
+				B2DD90702B8D10D4003D84B7 /* NetworkMonitor.swift */,
 				B2D91A1E2B8393C70004561A /* Preview Content */,
+				B28E061F2B8BBD1900F48661 /* Utils.swift */,
 			);
 			path = LibrePass;
 			sourceTree = "<group>";
@@ -162,8 +169,10 @@
 		C4BF8AE2A13C542780EBE854 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F596AB355AB5D89D17A58912 /* Pods-LibrePass.debug.xcconfig */,
-				2816A09CADE280F72E52A29A /* Pods-LibrePass.release.xcconfig */,
+				29FBE69442CBC35BD7E5388E /* Pods-LibrePass.debug(dev).xcconfig */,
+				C8B00C4C0AD732FFFB50F596 /* Pods-LibrePass.debug(prod).xcconfig */,
+				7F00EDC76A8230916D3D0E6C /* Pods-LibrePass.release(dev).xcconfig */,
+				D34431269757FABB868039F0 /* Pods-LibrePass.release(prod).xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -301,6 +310,7 @@
 				B253F1D82B83942B00D048F9 /* LibrePassLocalLogin.swift in Sources */,
 				B23D44F82BA62C6B00097960 /* OATH.swift in Sources */,
 				B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */,
+				176A30622BC1C103005C143E /* CustomEnvironment.swift in Sources */,
 				B253F1E12B83942B00D048F9 /* LibrePassEncryptedCipher.swift in Sources */,
 				B253F1DB2B83942B00D048F9 /* CredentialsDatabase.swift in Sources */,
 				B253F1DA2B83942B00D048F9 /* LibrePassManagerWindow.swift in Sources */,
@@ -310,8 +320,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		B2D91A212B8393C70004561A /* Debug */ = {
+		176A30632BC1C4D6005C143E /* Debug(Prod) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C8B00C4C0AD732FFFB50F596 /* Pods-LibrePass.debug(prod).xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -371,10 +382,52 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Debug;
+			name = "Debug(Prod)";
 		};
-		B2D91A222B8393C70004561A /* Release */ = {
+		176A30642BC1C4D6005C143E /* Debug(Prod) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C8B00C4C0AD732FFFB50F596 /* Pods-LibrePass.debug(prod).xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LibrePass/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LibrePass/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "LibrePass/LibrePass-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Debug(Prod)";
+		};
+		176A30652BC1C4D9005C143E /* Release(Prod) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D34431269757FABB868039F0 /* Pods-LibrePass.release(prod).xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -427,21 +480,22 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = "Release(Prod)";
 		};
-		B2D91A242B8393C70004561A /* Debug */ = {
+		176A30662BC1C4D9005C143E /* Release(Prod) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F596AB355AB5D89D17A58912 /* Pods-LibrePass.debug.xcconfig */;
+			baseConfigurationReference = D34431269757FABB868039F0 /* Pods-LibrePass.release(prod).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LibrePass/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LibrePass/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -456,6 +510,168 @@
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "LibrePass/LibrePass-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Release(Prod)";
+		};
+		B2D91A212B8393C70004561A /* Debug(Dev) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 29FBE69442CBC35BD7E5388E /* Pods-LibrePass.debug(dev).xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug(Dev)";
+		};
+		B2D91A222B8393C70004561A /* Release(Dev) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F00EDC76A8230916D3D0E6C /* Pods-LibrePass.release(dev).xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release(Dev)";
+		};
+		B2D91A242B8393C70004561A /* Debug(Dev) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 29FBE69442CBC35BD7E5388E /* Pods-LibrePass.debug(dev).xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LibrePass/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LibrePass/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -466,21 +682,22 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = Debug;
+			name = "Debug(Dev)";
 		};
-		B2D91A252B8393C70004561A /* Release */ = {
+		B2D91A252B8393C70004561A /* Release(Dev) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2816A09CADE280F72E52A29A /* Pods-LibrePass.release.xcconfig */;
+			baseConfigurationReference = 7F00EDC76A8230916D3D0E6C /* Pods-LibrePass.release(dev).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LibrePass/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LibrePass/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -495,6 +712,7 @@
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -504,7 +722,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = Release;
+			name = "Release(Dev)";
 		};
 /* End XCBuildConfiguration section */
 
@@ -512,20 +730,24 @@
 		B2D91A102B8393C60004561A /* Build configuration list for PBXProject "LibrePass" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B2D91A212B8393C70004561A /* Debug */,
-				B2D91A222B8393C70004561A /* Release */,
+				B2D91A212B8393C70004561A /* Debug(Dev) */,
+				176A30632BC1C4D6005C143E /* Debug(Prod) */,
+				B2D91A222B8393C70004561A /* Release(Dev) */,
+				176A30652BC1C4D9005C143E /* Release(Prod) */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release(Dev)";
 		};
 		B2D91A232B8393C70004561A /* Build configuration list for PBXNativeTarget "LibrePass" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B2D91A242B8393C70004561A /* Debug */,
-				B2D91A252B8393C70004561A /* Release */,
+				B2D91A242B8393C70004561A /* Debug(Dev) */,
+				176A30642BC1C4D6005C143E /* Debug(Prod) */,
+				B2D91A252B8393C70004561A /* Release(Dev) */,
+				176A30662BC1C4D9005C143E /* Release(Prod) */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release(Dev)";
 		};
 /* End XCConfigurationList section */
 	};
