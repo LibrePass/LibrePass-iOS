@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct LibrePassRegistrationWindow: View {
-//    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.presentationMode) var presentationMode
     
     @Binding var lClient: LibrePassClient
     
-    @State var apiServer = Environment.rootURL
+    @State var apiServer = CustomEnvironment.rootURL
     @State var email = String()
     @State var password = String()
     @State var confirmPassword = String()
@@ -62,7 +62,7 @@ struct LibrePassRegistrationWindow: View {
             Button("OK", role: .cancel) {
                 if self.registered {
                     self.registered = false
-//                    self.presentationMode.wrappedValue.dismiss()
+                    self.presentationMode.wrappedValue.dismiss()
                 }
             }
         }

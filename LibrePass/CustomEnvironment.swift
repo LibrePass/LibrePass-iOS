@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum Environment {
+public enum CustomEnvironment {
     private static let infoDictionary: [String: Any] = {
         guard let dict = Bundle.main.infoDictionary else {
             fatalError("Plist file not found")
@@ -16,7 +16,7 @@ public enum Environment {
     }()
     
     static let rootURL: String = {
-        guard let rootURLstring = Environment.infoDictionary["ROOT_URL"] as? String else {
+        guard let rootURLstring = CustomEnvironment.infoDictionary["ROOT_URL"] as? String else {
             fatalError("Root URL not set in plist for this environment")
         }
         
