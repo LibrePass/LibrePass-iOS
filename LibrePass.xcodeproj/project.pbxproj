@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17349C0D2BC1E19D00452814 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17349C0C2BC1E19D00452814 /* MainWindow.swift */; };
 		176A30622BC1C103005C143E /* CustomEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176A30612BC1C103005C143E /* CustomEnvironment.swift */; };
-		179E98172BC1DB2C00D71ACA /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179E98162BC1DB2C00D71ACA /* MainWindow.swift */; };
 		179E981C2BC1DDBB00D71ACA /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179E981B2BC1DDBB00D71ACA /* AuthViewModel.swift */; };
 		3975184DC26DCD2D852A7C08 /* Pods_LibrePass.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A927B022513678BA42B54FCF /* Pods_LibrePass.framework */; };
 		B23D44F82BA62C6B00097960 /* OATH.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D44F72BA62C6B00097960 /* OATH.swift */; };
@@ -37,9 +37,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		17349C0C2BC1E19D00452814 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		176A30612BC1C103005C143E /* CustomEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEnvironment.swift; sourceTree = "<group>"; };
 		176A306A2BC1C8D8005C143E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		179E98162BC1DB2C00D71ACA /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainWindow.swift; path = ../../../../../.Trash/Core/Root/MainWindow.swift; sourceTree = "<group>"; };
 		179E981B2BC1DDBB00D71ACA /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		29FBE69442CBC35BD7E5388E /* Pods-LibrePass.debug(dev).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.debug(dev).xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.debug(dev).xcconfig"; sourceTree = "<group>"; };
 		7F00EDC76A8230916D3D0E6C /* Pods-LibrePass.release(dev).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibrePass.release(dev).xcconfig"; path = "Target Support Files/Pods-LibrePass/Pods-LibrePass.release(dev).xcconfig"; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 		179E98152BC1DB1B00D71ACA /* Root */ = {
 			isa = PBXGroup;
 			children = (
-				179E98162BC1DB2C00D71ACA /* MainWindow.swift */,
+				17349C0C2BC1E19D00452814 /* MainWindow.swift */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -361,8 +361,8 @@
 				B2780F062B8A43C200835EE3 /* LibrePassRegistrationWindow.swift in Sources */,
 				B253F1DD2B83942B00D048F9 /* LibrePassApp.swift in Sources */,
 				B28E06202B8BBD1900F48661 /* Utils.swift in Sources */,
-				179E98172BC1DB2C00D71ACA /* MainWindow.swift in Sources */,
 				B253F1D82B83942B00D048F9 /* LibrePassLocalLogin.swift in Sources */,
+				17349C0D2BC1E19D00452814 /* MainWindow.swift in Sources */,
 				B23D44F82BA62C6B00097960 /* OATH.swift in Sources */,
 				B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */,
 				176A30622BC1C103005C143E /* CustomEnvironment.swift in Sources */,
