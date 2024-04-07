@@ -12,6 +12,8 @@ struct LibrePassClient {
     var credentialsDatabase: LibrePassCredentialsDatabase?
     var vault: LibrePassDecryptedVault
     
+    let networkMonitor = NetworkMonitor.shared
+    
     init(apiUrl: String) {
         self.client = ApiClient(apiUrl: apiUrl)
         self.vault = LibrePassDecryptedVault(lastSync: 0)

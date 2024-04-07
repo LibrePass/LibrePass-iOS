@@ -116,7 +116,7 @@ struct LibrePassManagerWindow: View {
     }
     
     func syncVault() throws {
-        if networkMonitor.isConnected {
+        if NetworkMonitor.shared.isConnected {
             try self.lClient.syncVault()
         }
     }

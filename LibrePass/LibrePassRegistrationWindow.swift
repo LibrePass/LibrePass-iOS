@@ -12,7 +12,7 @@ struct LibrePassRegistrationWindow: View {
     
     @Binding var lClient: LibrePassClient
     
-    @State var apiServer = "https://api.librepass.org"
+    @State var apiServer = CustomEnvironment.rootURL
     @State var email = String()
     @State var password = String()
     @State var confirmPassword = String()
