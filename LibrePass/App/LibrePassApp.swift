@@ -12,7 +12,7 @@ struct LibrePassApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainWindow()
+            ContentView()
         }
     }
 }

@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		17349C0D2BC1E19D00452814 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17349C0C2BC1E19D00452814 /* MainWindow.swift */; };
+		17349C0D2BC1E19D00452814 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17349C0C2BC1E19D00452814 /* ContentView.swift */; };
+		17349C0F2BC1E4A100452814 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17349C0E2BC1E4A100452814 /* LoginView.swift */; };
+		17349C112BC1E4B300452814 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17349C102BC1E4B300452814 /* SignupView.swift */; };
 		176A30622BC1C103005C143E /* CustomEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176A30612BC1C103005C143E /* CustomEnvironment.swift */; };
 		179E981C2BC1DDBB00D71ACA /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179E981B2BC1DDBB00D71ACA /* AuthViewModel.swift */; };
 		3975184DC26DCD2D852A7C08 /* Pods_LibrePass.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A927B022513678BA42B54FCF /* Pods_LibrePass.framework */; };
@@ -37,7 +39,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		17349C0C2BC1E19D00452814 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
+		17349C0C2BC1E19D00452814 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		17349C0E2BC1E4A100452814 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		17349C102BC1E4B300452814 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 		176A30612BC1C103005C143E /* CustomEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEnvironment.swift; sourceTree = "<group>"; };
 		176A306A2BC1C8D8005C143E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		179E981B2BC1DDBB00D71ACA /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
@@ -107,7 +111,7 @@
 		179E98152BC1DB1B00D71ACA /* Root */ = {
 			isa = PBXGroup;
 			children = (
-				17349C0C2BC1E19D00452814 /* MainWindow.swift */,
+				17349C0C2BC1E19D00452814 /* ContentView.swift */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -124,6 +128,8 @@
 		179E98192BC1DD1A00D71ACA /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				17349C0E2BC1E4A100452814 /* LoginView.swift */,
+				17349C102BC1E4B300452814 /* SignupView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -357,12 +363,13 @@
 				B253F1D72B83942B00D048F9 /* LibrePassCipherView.swift in Sources */,
 				B253F1DF2B83942B00D048F9 /* Crypto.swift in Sources */,
 				B253F1DE2B83942B00D048F9 /* ApiClient.swift in Sources */,
+				17349C0F2BC1E4A100452814 /* LoginView.swift in Sources */,
 				B2D4447B2B87D0DF0031A685 /* Vault.swift in Sources */,
 				B2780F062B8A43C200835EE3 /* LibrePassRegistrationWindow.swift in Sources */,
 				B253F1DD2B83942B00D048F9 /* LibrePassApp.swift in Sources */,
 				B28E06202B8BBD1900F48661 /* Utils.swift in Sources */,
 				B253F1D82B83942B00D048F9 /* LibrePassLocalLogin.swift in Sources */,
-				17349C0D2BC1E19D00452814 /* MainWindow.swift in Sources */,
+				17349C0D2BC1E19D00452814 /* ContentView.swift in Sources */,
 				B23D44F82BA62C6B00097960 /* OATH.swift in Sources */,
 				B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */,
 				176A30622BC1C103005C143E /* CustomEnvironment.swift in Sources */,
@@ -370,6 +377,7 @@
 				B253F1E12B83942B00D048F9 /* LibrePassEncryptedCipher.swift in Sources */,
 				B253F1DB2B83942B00D048F9 /* CredentialsDatabase.swift in Sources */,
 				B253F1DA2B83942B00D048F9 /* LibrePassManagerWindow.swift in Sources */,
+				17349C112BC1E4B300452814 /* SignupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
