@@ -17,7 +17,6 @@ struct CipherView: View {
         do {
             cipher.lastModified = Int64(Date().timeIntervalSince1970)
             try lClient.put(cipher: cipher)
-            try lClient.syncVault()
         } catch {
             
         }

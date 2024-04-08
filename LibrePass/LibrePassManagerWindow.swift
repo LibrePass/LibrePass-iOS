@@ -116,9 +116,7 @@ struct LibrePassManagerWindow: View {
     }
     
     func syncVault() throws {
-        if networkMonitor.isConnected {
-            try self.lClient.syncVault()
-        }
+        try self.lClient.syncVault()
     }
     
     func deleteCiphers() throws {
@@ -135,7 +133,6 @@ struct LibrePassManagerWindow: View {
             
             do {
                 try self.lClient.put(cipher: cipher)
-                try self.syncVault()
             } catch ApiClientErrors.StatusCodeNot200(let statusCode, let body){
                 self.errorString = String(statusCode) + ": " + body.error
                 self.showAlert = true

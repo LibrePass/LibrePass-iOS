@@ -15,6 +15,10 @@ struct LibrePassEncryptedVault: Codable {
     var lastSync: Int64
     
     static func loadVault() throws -> Self {
+        if !isVaultSavedLocally() {
+            try LibrePassEncryptedVault(lastSync: 0).saveVault()
+        }
+        
         let vaultJson = UserDefaults.standard.data(forKey: "vault")!
         
         return try JSONDecoder().decode(Self.self, from: vaultJson)
@@ -27,7 +31,7 @@ struct LibrePassEncryptedVault: Codable {
     }
     
     func decryptVault(key: SymmetricKey) throws -> LibrePassDecryptedVault {
-        var ciphers: LibrePassDecryptedVault = LibrePassDecryptedVault(toSync: self.toSync, idstoDelete: self.idsToDelete, lastSync: self.lastSync, key: key)
+        var ciphers: LibrePassDecryptedVault = LibrePassDecryptedVault(toSync: [], idstoDelete: self.idsToDelete, lastSync: self.lastSync, key: key)
         for (i, encCipher) in self.vault.enumerated() {
             try ciphers.addOrReplace(cipher: try LibrePassCipher(encCipher: encCipher, key: key), toSync: self.toSync[i], save: false)
         }
@@ -48,7 +52,7 @@ struct LibrePassDecryptedVault {
     var key: SymmetricKey?
     
     mutating func addOrReplace(cipher: LibrePassCipher, toSync: Bool, save: Bool) throws {
-        if let idx = self.vault.firstIndex(where: { ciph in ciph.id == cipher.id }) {
+        if let idx = self.vault.firstIndex(where: { cipher.id == $0.id }) {
             self.vault[idx] = cipher
             self.toSync[idx] = toSync
         } else {

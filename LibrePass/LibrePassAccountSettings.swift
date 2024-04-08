@@ -74,7 +74,7 @@ struct LibrePassAccountSettings: View {
     }
     
     func updateCredentials() throws {
-        let (oldPrivateData, oldPublicData, oldSharedData) = try self.lClient.getKeys(email: self.lClient.credentialsDatabase!.email, password: self.password, argon2options: self.lClient.credentialsDatabase!.argon2idParams)
+        let (_, oldPublicData, oldSharedData) = try self.lClient.getKeys(email: self.lClient.credentialsDatabase!.email, password: self.password, argon2options: self.lClient.credentialsDatabase!.argon2idParams)
         
         if dataToHexString(data: oldPublicData) != self.lClient.credentialsDatabase!.publicKey {
             throw LibrePassApiErrors.WithMessage(message: "Invalid credentials")

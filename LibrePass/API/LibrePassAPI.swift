@@ -15,10 +15,6 @@ struct LibrePassClient {
     init(apiUrl: String) {
         self.client = ApiClient(apiUrl: apiUrl)
         self.vault = LibrePassDecryptedVault(lastSync: 0)
-        
-        if !LibrePassEncryptedVault.isVaultSavedLocally() {
-            _ = try? LibrePassEncryptedVault(lastSync: 0).saveVault()
-        }
     }
     
     init(credentials: LibrePassCredentialsDatabase, password: String) throws {
@@ -39,7 +35,6 @@ struct LibrePassClient {
         
         self.sharedKey = SymmetricKey(data: serializedSharedKey)
         self.credentialsDatabase = credentials
-        self.vault.key = self.sharedKey!
     }
     
     func getKeys(email: String, password: String, argon2options: Argon2IdOptions) throws -> (Data, Data, Data) {
@@ -147,113 +142,90 @@ struct LibrePassClient {
     }
     
     mutating func fetchCiphers() throws {
-        self.vault.key = self.sharedKey!
-        
-        let resp = try self.client.request(path: "/api/cipher", body: nil, method: "GET")
-        
-        var cryptedVault = LibrePassEncryptedVault(lastSync: Int64(Date().timeIntervalSince1970))
-        cryptedVault.vault = try JSONDecoder().decode([LibrePassEncryptedCipher].self, from: resp)
-        for _ in cryptedVault.vault {
-            cryptedVault.toSync.append(false)
-        }
-        
-        try cryptedVault.saveVault()
-        
-        self.vault = try cryptedVault.decryptVault(key: self.sharedKey!)
+        UserDefaults.standard.removeObject(forKey: "vault")
+        try self.syncVault(request: SyncRequest(lastSyncTimestamp: 0, updated: [], deleted: []))
+    }
+    
+    struct SyncRequest: Codable {
+        var lastSyncTimestamp: Int64
+        var updated: [LibrePassEncryptedCipher]
+        var deleted: [String]
     }
     
     mutating func syncVault() throws {
+        var updated: [LibrePassEncryptedCipher] = []
+        let encryptedVault = try LibrePassEncryptedVault.loadVault()
+        
+        for (index, element) in encryptedVault.toSync.enumerated() {
+            if element {
+                updated.append(encryptedVault.vault[index])
+            }
+        }
+        
+        let syncRequest = SyncRequest(lastSyncTimestamp: encryptedVault.lastSync, updated: updated, deleted: self.vault.idstoDelete)
+        try self.syncVault(request: syncRequest)
+    }
+    
+    mutating func syncVault(request: SyncRequest) throws {
         struct SyncResponse: Codable {
             var ids: [String]
             var ciphers: [LibrePassEncryptedCipher]
         }
         
-        let encryptedVault = try LibrePassEncryptedVault.loadVault()
-        self.vault = try encryptedVault.decryptVault(key: self.sharedKey!)
+        self.vault = try LibrePassEncryptedVault.loadVault().decryptVault(key: self.sharedKey!)
+        
+        var syncRequest = request
+        if syncRequest.lastSyncTimestamp == -2 {
+            syncRequest.lastSyncTimestamp = self.vault.lastSync
+        }
         
         if networkMonitor.isConnected {
-            let resp = try self.client.request(path: "/api/cipher/sync?lastSync=" + String(self.vault.lastSync), body: nil, method: "GET")
-            
+            let syncRequestJSON = try JSONEncoder().encode(syncRequest)
+            let resp = try self.client.request(path: "/api/cipher/sync", body: syncRequestJSON, method: "POST")
             let updated = try JSONDecoder().decode(SyncResponse.self, from: resp)
             
-            var newVaultToSync: [Bool] = []
-            var newVault: [LibrePassCipher] = []
-            for (i, j) in self.vault.vault.enumerated() {
-                if updated.ids.firstIndex(where: { id in j.id == id }) == nil && !self.vault.toSync[i] {
-                    continue
-                }
-                
-                if let i2 = updated.ciphers.firstIndex(where: { cipher in cipher.id == j.id }) {
-                    if let last1 = updated.ciphers[i2].lastModified, let last2 = j.lastModified {
-                        if last1 > last2 || !self.vault.toSync[i] {
-                            self.vault.vault[i] = try LibrePassCipher(encCipher: updated.ciphers[i2], key: self.sharedKey!)
-                            self.vault.toSync[i] = false
-                        }
-                    } else if !self.vault.toSync[i] {
-                        self.vault.vault[i] = try LibrePassCipher(encCipher: updated.ciphers[i2], key: self.sharedKey!)
-                        self.vault.toSync[i] = false
+            for id in updated.ids {
+                if let newCipher = updated.ciphers.first(where: { $0.id == id }) {
+                    if let cipher = self.vault.vault.first(where: { $0.id == id }), let last1 = cipher.lastModified, let last2 = newCipher.lastModified, last1 > last2 {
+                        continue
                     }
-                }
-                
-                if self.vault.toSync[i] {
-                    if let _ = try? self.put(cipher: self.vault.vault[i]) {
-                        self.vault.toSync[i] = false
-                    }
-                }
-                
-                newVault.append(self.vault.vault[i])
-                newVaultToSync.append(false)
-            }
-            
-            for index in stride(from: self.vault.idstoDelete.count - 1, through: 0, by: -1) {
-                if let _ = try? self.delete(id: self.vault.idstoDelete[index]) {
-                    if let _ = try? self.vault.remove(id: self.vault.idstoDelete[index], save: true) {
-                        self.vault.idstoDelete.remove(at: index)
-                    }
+                    
+                    try self.vault.addOrReplace(cipher: try LibrePassCipher(encCipher: newCipher, key: self.sharedKey!), toSync: false, save: false)
                 }
             }
             
-            for encCipher in updated.ciphers {
-                if self.vault.vault.firstIndex(where: { cipher in encCipher.id == cipher.id }) == nil {
-                    newVault.append(try LibrePassCipher(encCipher: encCipher, key: self.sharedKey!))
-                    newVaultToSync.append(false)
+            for cipher in self.vault.vault {
+                if updated.ids.first(where: { $0 == cipher.id }) == nil {
+                    try self.vault.remove(cipher: cipher, save: false)
                 }
             }
             
-            self.vault.vault = newVault
-            self.vault.toSync = newVaultToSync
             self.vault.lastSync = Int64(Date().timeIntervalSince1970)
             try self.vault.encryptVault().saveVault()
         }
     }
     
     mutating func put(encryptedCipher: LibrePassEncryptedCipher) throws {
-        try self.put(cipher: LibrePassCipher(encCipher: encryptedCipher, key: self.sharedKey!))
+        if networkMonitor.isConnected {
+            try self.syncVault(request: SyncRequest(lastSyncTimestamp: -2, updated: [encryptedCipher], deleted: []))
+        } else {
+            try self.vault.addOrReplace(cipher: LibrePassCipher(encCipher: encryptedCipher, key: self.sharedKey!), toSync: true, save: true)
+        }
     }
     
     mutating func put(cipher: LibrePassCipher) throws {
         let encrypted = try LibrePassEncryptedCipher(cipher: cipher, key: self.sharedKey!)
     
-        var toSync = false
-        if networkMonitor.isConnected {
-            let req = try JSONEncoder().encode(encrypted)
-            
-            _ = try self.client.request(path: "/api/cipher", body: req, method: "PUT")
-        } else {
-            toSync = true
-        }
-        
-        try self.vault.addOrReplace(cipher: cipher, toSync: toSync, save: true)
+        try self.put(encryptedCipher: encrypted)
     }
     
     mutating func delete(id: String) throws {
         if networkMonitor.isConnected {
-            _ = try self.client.request(path: "/api/cipher/" + id, body: nil, method: "DELETE")
+            try self.syncVault(request: SyncRequest(lastSyncTimestamp: -2, updated: [], deleted: [id]))
         } else {
             self.vault.idstoDelete.append(id)
+            try self.vault.remove(id: id, save: true)
         }
-        
-        try self.vault.remove(id: id, save: true)
     }
     
     mutating func updateCredentials(email: String, password: String, passwordHint: String, oldSharedKey: String) throws {
@@ -321,7 +293,7 @@ struct LibrePassClient {
             var code: String
         }
         
-        let (oldPrivateData, oldPublicData, oldSharedData) = try self.getKeys(email: self.credentialsDatabase!.email, password: password, argon2options: self.credentialsDatabase!.argon2idParams)
+        let (_, oldPublicData, oldSharedData) = try self.getKeys(email: self.credentialsDatabase!.email, password: password, argon2options: self.credentialsDatabase!.argon2idParams)
         
         if dataToHexString(data: oldPublicData) != self.credentialsDatabase!.publicKey {
             throw LibrePassApiErrors.WithMessage(message: "Invalid credentials")
