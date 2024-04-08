@@ -16,7 +16,7 @@ class LibrePassEncryptedCipher: Codable {
     var collection: String?
     var favorite: Bool
     var rePrompt: Bool
-    var version: Int
+    var version: Int?
     var created: Int64?
     var lastModified: Int64?
     
@@ -24,17 +24,15 @@ class LibrePassEncryptedCipher: Codable {
         self.id = cipher.id
         self.owner = cipher.owner
         
+        self.type = cipher.type.rawValue
         switch cipher.type {
         case .Login:
-            self.type = 0
             self.protectedData = dataToHexString(data: try aesGcmEncrypt(data: JSONEncoder().encode(cipher.loginData!), key: key))
             break
         case .SecureNote:
-            self.type = 1
             self.protectedData = dataToHexString(data: try aesGcmEncrypt(data: JSONEncoder().encode(cipher.secureNoteData!), key: key))
             break
         case .Card:
-            self.type = 2
             self.protectedData = dataToHexString(data: try aesGcmEncrypt(data: JSONEncoder().encode(cipher.cardData!), key: key))
             break
         }

@@ -19,7 +19,7 @@ class LibrePassCipher: Codable {
     var collection: String?
     var favorite: Bool = false
     var rePrompt: Bool = false
-    var version: Int = 1
+    var version: Int?
     var created: Int64?
     var lastModified: Int64?
     
@@ -43,8 +43,13 @@ class LibrePassCipher: Codable {
         }
     }
     
-    convenience init(encCipher: LibrePassEncryptedCipher, key: SymmetricKey) throws {
-        self.init(id: encCipher.id, owner: encCipher.owner, type: CipherType.Card)
+    init(encCipher: LibrePassEncryptedCipher, key: SymmetricKey) throws {
+        self.id = encCipher.id
+        self.owner = encCipher.owner
+        guard let type = LibrePassCipher.CipherType(rawValue: encCipher.type) else {
+            throw LibrePassApiErrors.WithMessage(message: "Invalid cipher type")
+        }
+        self.type = type
         self.collection = encCipher.collection
         self.favorite = encCipher.favorite
         self.rePrompt = encCipher.rePrompt
@@ -53,26 +58,21 @@ class LibrePassCipher: Codable {
         self.lastModified = encCipher.lastModified
         
         let decoder = JSONDecoder()
-        switch encCipher.type {
-        case 0:
+        switch self.type {
+        case .Login:
             self.loginData = try decoder.decode(CipherLoginData.self, from: aesGcmDecrypt(data: hexStringToData(string: encCipher.protectedData)!, key: key))
-            self.type = CipherType.Login
             break
-        case 1:
+        case .SecureNote:
             self.secureNoteData = try decoder.decode(CipherSecureNoteData.self, from: aesGcmDecrypt(data: hexStringToData(string: encCipher.protectedData)!, key: key))
-            self.type = CipherType.SecureNote
             break
-        case 2:
+        case .Card:
             self.cardData = try decoder.decode(CipherCardData.self, from: aesGcmDecrypt(data: hexStringToData(string: encCipher.protectedData)!, key: key))
-            self.type = CipherType.Card
-            break
-        default:
             break
         }
     }
     
-    enum CipherType: Codable {
-        case Login
+    enum CipherType: Int, Codable {
+        case Login = 0
         case SecureNote
         case Card
     }

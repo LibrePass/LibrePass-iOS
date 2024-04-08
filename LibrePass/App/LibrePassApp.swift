@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct LibrePassApp: App {
-    
     var body: some Scene {
         WindowGroup {
             MainWindow()
@@ -17,29 +16,23 @@ struct LibrePassApp: App {
     }
 }
 
-var networkMonitor = NetworkMonitor()
-
 struct MainWindow: View {
-    @State var lClient: LibrePassClient = LibrePassClient(apiUrl: "")
-    
-    @State var localLogIn = false
-    @State var loggedIn = false
-    
+    @StateObject var context: LibrePassContext = LibrePassContext(loggedIn: false, locallyLoggedIn: LibrePassCredentialsDatabase.isLocallyLoggedIn())
     @State var showAbout = false
     
     var body: some View {
         HStack {
-            if self.loggedIn {
-                LibrePassManagerWindow(lClient: $lClient, loggedIn: $loggedIn, locallyLoggedIn: $localLogIn)
-            } else if self.localLogIn {
-                LibrePassLocalLogin(lClient: $lClient, loggedIn: $loggedIn, localLogIn: $localLogIn)
+            if self.context.loggedIn {
+                LibrePassManagerWindow()
+            } else if self.context.locallyLoggedIn {
+                LibrePassLocalLogin()
             } else {
                 NavigationView {
                     List {
-                        NavigationLink(destination: LibrePassLoginWindow(lClient: $lClient, loggedIn: $loggedIn, localLogIn: $localLogIn)) {
+                        NavigationLink(destination: LibrePassLoginWindow()) {
                             Text("Log in")
                         }
-                        NavigationLink(destination: LibrePassRegistrationWindow(lClient: $lClient)) {
+                        NavigationLink(destination: LibrePassRegistrationWindow()) {
                             Text("Register")
                         }
                     }
@@ -53,10 +46,7 @@ struct MainWindow: View {
                 }
             }
         }
-        
-        .onAppear {
-            self.localLogIn = LibrePassCredentialsDatabase.isLocallyLoggedIn()
-        }
+        .environmentObject(context)
         
         .sheet(isPresented: self.$showAbout) {
             VStack {

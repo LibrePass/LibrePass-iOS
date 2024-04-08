@@ -8,14 +8,11 @@
 import SwiftUI
 
 struct LibrePassManagerWindow: View {
+    @EnvironmentObject var context: LibrePassContext
+    
     @State private var errorString: String = " "
     @State private var showAlert = false
     @State private var new = false
-    
-    @Binding var lClient: LibrePassClient
-    
-    @Binding var loggedIn: Bool
-    @Binding var locallyLoggedIn: Bool
     
     @State var refreshIndicator: Bool = false
     @State var deletionIndicator: Bool = false
@@ -27,10 +24,10 @@ struct LibrePassManagerWindow: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(self.lClient.vault.vault, id: \.self.id) { cipher in
-                    let index = lClient.vault.vault.firstIndex(where: { vaultCipher in vaultCipher.id == cipher.id })!
+                ForEach(self.context.lClient!.vault.vault, id: \.self.id) { cipher in
+                    let index = self.context.lClient!.vault.vault.firstIndex(where: { vaultCipher in vaultCipher.id == cipher.id })!
                     
-                    NavigationLink(destination: CipherView(lClient: $lClient, cipher: cipher, index: index)) {
+                    NavigationLink(destination: CipherView(cipher: cipher, index: index)) {
                         HStack {
                             CipherButton(cipher: cipher)
                             
@@ -66,8 +63,7 @@ struct LibrePassManagerWindow: View {
                             }
                             
                             Button(action: {
-                                self.lClient.unAuth()
-                                self.loggedIn = false
+                                self.context.unAuth()
                             }) {
                                 Image(systemName: "lock")
                                 Text("Lock vault")
@@ -89,8 +85,7 @@ struct LibrePassManagerWindow: View {
         
         .alert(self.errorString, isPresented: self.$showAlert) {
             Button("OK", role: .cancel) {
-                lClient.unAuth()
-                self.loggedIn = false
+                self.context.unAuth()
             }
         }
         
@@ -111,31 +106,28 @@ struct LibrePassManagerWindow: View {
         }
         
         .sheet(isPresented: self.$accountSettings) {
-            LibrePassAccountSettings(lClient: self.$lClient, locallyLoggedIn: self.$locallyLoggedIn, loggedIn: self.$loggedIn)
+            LibrePassAccountSettings()
         }
     }
     
     func syncVault() throws {
-        if networkMonitor.isConnected {
-            try self.lClient.syncVault()
-        }
+        try self.context.lClient!.syncVault()
     }
     
     func deleteCiphers() throws {
         Task {
             for index in self.toDelete {
-                try self.lClient.delete(id: self.lClient.vault.vault[index].id)
+                try self.context.lClient!.delete(id: self.context.lClient!.vault.vault[index].id)
             }
         }
     }
     
     func newCipher(type: LibrePassCipher.CipherType) {
         Task {
-            let cipher = LibrePassCipher(id: lClient.generateId(), owner: lClient.credentialsDatabase!.userId, type: type)
+            let cipher = LibrePassCipher(id: self.context.lClient!.generateId(), owner: self.context.lClient!.credentialsDatabase!.userId, type: type)
             
             do {
-                try self.lClient.put(cipher: cipher)
-                try self.syncVault()
+                try self.context.lClient!.put(cipher: cipher)
             } catch ApiClientErrors.StatusCodeNot200(let statusCode, let body){
                 self.errorString = String(statusCode) + ": " + body.error
                 self.showAlert = true

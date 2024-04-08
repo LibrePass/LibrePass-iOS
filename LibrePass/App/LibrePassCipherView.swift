@@ -9,15 +9,15 @@ import SwiftUI
 import SwiftOTP
 
 struct CipherView: View {
-    @Binding var lClient: LibrePassClient
+    @EnvironmentObject var context: LibrePassContext
+    
     var cipher: LibrePassCipher
     var index: Int
     
     func save(cipher: LibrePassCipher) {
         do {
             cipher.lastModified = Int64(Date().timeIntervalSince1970)
-            try lClient.put(cipher: cipher)
-            try lClient.syncVault()
+            try self.context.lClient!.put(cipher: cipher)
         } catch {
             
         }

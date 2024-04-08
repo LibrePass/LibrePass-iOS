@@ -9,8 +9,7 @@ import SwiftUI
 
 struct LibrePassRegistrationWindow: View {
     @Environment(\.presentationMode) var presentationMode
-    
-    @Binding var lClient: LibrePassClient
+    @EnvironmentObject var context: LibrePassContext
     
     @State var apiServer = "https://api.librepass.org"
     @State var email = String()
@@ -43,8 +42,8 @@ struct LibrePassRegistrationWindow: View {
                 }
                 
                 do {
-                    self.lClient.replaceApiClient(apiUrl: apiServer)
-                    try self.lClient.register(email: self.email, password: self.password, passwordHint: self.passwordHint)
+                    self.context.lClient!.replaceApiClient(apiUrl: apiServer)
+                    try self.context.lClient!.register(email: self.email, password: self.password, passwordHint: self.passwordHint)
                     
                     self.errorString = "Check your mailbox, verify email and log in"
                     self.registered = true
