@@ -8,14 +8,11 @@
 import SwiftUI
 
 struct LibrePassLoginWindow: View {
-    @Binding var lClient: LibrePassClient
+    @EnvironmentObject var context: LibrePassContext
     
     @State private var email = String()
     @State private var password = String()
     @State private var apiServer = "https://api.librepass.org"
-    
-    @Binding var loggedIn: Bool
-    @Binding var localLogIn: Bool
     
     var body: some View {
         List {
@@ -26,23 +23,9 @@ struct LibrePassLoginWindow: View {
             TextField("API Server", text: $apiServer)
                 .autocapitalization(.none)
             
-            ButtonWithSpinningWheel(text: "Log in", task: self.login)
+            ButtonWithSpinningWheel(text: "Log in", task: { try self.context.logIn(email: self.email, password: self.password, apiUrl: self.apiServer)} )
         }
             
         .navigationTitle("Log in to LibrePass")
-    }
-    
-    func login() throws {
-        if self.email.isEmpty || self.password.isEmpty || self.apiServer.isEmpty {
-            throw LibrePassApiErrors.WithMessage(message: "Empty fields")
-        }
-        
-        lClient.unAuth()
-        lClient.replaceApiClient(apiUrl: self.apiServer)
-        
-        try lClient.login(email: self.email, password: self.password)
-        try self.lClient.fetchCiphers()
-        self.loggedIn = true
-        self.localLogIn = true
     }
 }

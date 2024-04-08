@@ -22,3 +22,5 @@ class NetworkMonitor: ObservableObject {
         self.monitor.start(queue: self.dispatchQueue)
     }
 }
+
+let networkMonitor = NetworkMonitor()
