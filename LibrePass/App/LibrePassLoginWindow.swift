@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LibrePassLoginWindow: View {
     @EnvironmentObject var context: LibrePassContext
+    @Environment(\.modelContext) var modelContext
     
     @State private var email = String()
     @State private var password = String()
@@ -23,7 +24,10 @@ struct LibrePassLoginWindow: View {
             TextField("API Server", text: $apiServer)
                 .autocapitalization(.none)
             
-            ButtonWithSpinningWheel(text: "Log in", task: { try self.context.logIn(email: self.email, password: self.password, apiUrl: self.apiServer)} )
+            ButtonWithSpinningWheel(text: "Log in", task: {
+                modelContext.insert(try self.context.logIn(email: self.email, password: self.password, apiUrl: self.apiServer))
+                modelContext.insert(LastSyncStorage(lastSync: 0))
+            })
         }
             
         .navigationTitle("Log in to LibrePass")

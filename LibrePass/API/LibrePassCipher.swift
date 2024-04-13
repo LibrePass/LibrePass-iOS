@@ -121,3 +121,19 @@ class LibrePassCipher: Codable {
         var lastUsed: Int
     }
 }
+
+extension [LibrePassEncryptedCipher] {
+    mutating func addOrReplace(cipher: LibrePassEncryptedCipher) {
+        if let index = self.firstIndex(where: { cipher.id == $0.id }) {
+            self[index] = cipher
+        } else {
+            self.append(cipher)
+        }
+    }
+    
+    mutating func delete(id: String) {
+        if let index = self.firstIndex(where: { id == $0.id }) {
+            self.remove(at: index)
+        }
+    }
+}

@@ -42,8 +42,9 @@ struct LibrePassRegistrationWindow: View {
                 }
                 
                 do {
-                    self.context.lClient!.replaceApiClient(apiUrl: apiServer)
+                    self.context.lClient = LibrePassClient(apiUrl: self.apiServer)
                     try self.context.lClient!.register(email: self.email, password: self.password, passwordHint: self.passwordHint)
+                    self.context.lClient = nil
                     
                     self.errorString = "Check your mailbox, verify email and log in"
                     self.registered = true

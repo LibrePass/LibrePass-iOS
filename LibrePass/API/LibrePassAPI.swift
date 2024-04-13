@@ -8,19 +8,18 @@ import SwiftUI
 struct LibrePassClient {
     var client: ApiClient
     var loginData: LoginData?
+    var argon2id: Argon2IdOptions?
     var sharedKey: SymmetricKey?
-    var credentialsDatabase: LibrePassCredentialsDatabase?
-    var vault: LibrePassDecryptedVault
     
     init(apiUrl: String) {
         self.client = ApiClient(apiUrl: apiUrl)
-        self.vault = LibrePassDecryptedVault(lastSync: 0)
     }
     
     init(credentials: LibrePassCredentialsDatabase, password: String) throws {
         self.init(apiUrl: credentials.apiUrl)
         self.client.accessToken = credentials.accessToken
         self.loginData = LoginData(userId: credentials.userId, apiKey: credentials.accessToken, verified: true)
+        self.argon2id = credentials.argon2idParams
         
         let publicKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: hexStringToData(string: credentials.publicKey)!)
         let privateKeyData = try argon2Hash(email: credentials.email, password: password, hashOptions: credentials.argon2idParams)
@@ -34,7 +33,6 @@ struct LibrePassClient {
         }
         
         self.sharedKey = SymmetricKey(data: serializedSharedKey)
-        self.credentialsDatabase = credentials
     }
     
     func getKeys(email: String, password: String, argon2options: Argon2IdOptions) throws -> (Data, Data, Data) {
@@ -87,15 +85,15 @@ struct LibrePassClient {
         _ = try self.client.request(path: "/api/auth/register", body: requestData, method: "POST")
     }
     
-    mutating func login(email: String, password: String) throws {
+    mutating func login(email: String, password: String) throws -> LibrePassCredentialsDatabase {
         struct LoginRequestBody: Encodable {
             var email: String
             var sharedKey: String
         }
         
-        let preLogin = try self.preLogin(email: email)
+        self.argon2id = try self.preLogin(email: email)
         
-        let (privateKeyData, _, sharedKeyData) = try self.getKeys(email: email, password: password, argon2options: preLogin)
+        let (privateKeyData, _, sharedKeyData) = try self.getKeys(email: email, password: password, argon2options: self.argon2id!)
         
         let encoder = JSONEncoder()
         let loginRequestData = LoginRequestBody(email: email, sharedKey: dataToHexString(data: sharedKeyData))
@@ -117,33 +115,7 @@ struct LibrePassClient {
             return Data(Array($0))
         }
             
-        self.credentialsDatabase = LibrePassCredentialsDatabase(userId: self.loginData!.userId, email: email, apiUrl: self.client.apiUrl, accessToken: self.client.accessToken!, publicKey: dataToHexString(data: privateKeySerialized), argon2idParams: preLogin)
-        try self.credentialsDatabase!.save()
-    }
-    
-    mutating func replaceApiClient(apiUrl: String) {
-        self.client = ApiClient(apiUrl: apiUrl)
-    }
-    
-    mutating func logOut() {
-        UserDefaults.standard.removeObject(forKey: "credentialsDatabase")
-        UserDefaults.standard.removeObject(forKey: "vault")
-        UserDefaults.standard.removeObject(forKey: "queue")
-        
-        self.unAuth()
-    }
-    
-    mutating func unAuth() {
-        self.client = ApiClient(apiUrl: self.client.apiUrl)
-        self.loginData = nil
-        self.sharedKey = nil
-        self.credentialsDatabase = nil
-        self.vault = LibrePassDecryptedVault(lastSync: 0)
-    }
-    
-    mutating func fetchCiphers() throws {
-        UserDefaults.standard.removeObject(forKey: "vault")
-        try self.syncVault(request: SyncRequest(lastSyncTimestamp: 0, updated: [], deleted: []))
+        return LibrePassCredentialsDatabase(userId: self.loginData!.userId, email: email, apiUrl: self.client.apiUrl, accessToken: self.client.accessToken!, publicKey: dataToHexString(data: privateKeySerialized), argon2idParams: self.argon2id!)
     }
     
     struct SyncRequest: Codable {
@@ -152,83 +124,29 @@ struct LibrePassClient {
         var deleted: [String]
     }
     
-    mutating func syncVault() throws {
-        var updated: [LibrePassEncryptedCipher] = []
-        let encryptedVault = try LibrePassEncryptedVault.loadVault()
-        
-        for (index, element) in encryptedVault.toSync.enumerated() {
-            if element {
-                updated.append(encryptedVault.vault[index])
-            }
-        }
-        
-        let syncRequest = SyncRequest(lastSyncTimestamp: encryptedVault.lastSync, updated: updated, deleted: self.vault.idstoDelete)
-        try self.syncVault(request: syncRequest)
+    struct SyncResponse: Codable {
+        var ids: [String]
+        var ciphers: [LibrePassEncryptedCipher]
     }
     
-    mutating func syncVault(request: SyncRequest) throws {
-        struct SyncResponse: Codable {
-            var ids: [String]
-            var ciphers: [LibrePassEncryptedCipher]
-        }
-        
-        self.vault = try LibrePassEncryptedVault.loadVault().decryptVault(key: self.sharedKey!)
-        
-        var syncRequest = request
-        if syncRequest.lastSyncTimestamp == -2 {
-            syncRequest.lastSyncTimestamp = self.vault.lastSync
-        }
-        
+    func syncVault(toPush: [LibrePassEncryptedCipher], toDelete: [String], lastSync: Int64) throws -> SyncResponse? {
+        let syncRequest = SyncRequest(lastSyncTimestamp: lastSync, updated: toPush, deleted: toDelete)
+        return try self.syncVault(request: syncRequest)
+    }
+
+    func syncVault(request: SyncRequest) throws -> SyncResponse? {
         if networkMonitor.isConnected {
-            let syncRequestJSON = try JSONEncoder().encode(syncRequest)
+            let syncRequestJSON = try JSONEncoder().encode(request)
             let resp = try self.client.request(path: "/api/cipher/sync", body: syncRequestJSON, method: "POST")
             let updated = try JSONDecoder().decode(SyncResponse.self, from: resp)
             
-            for id in updated.ids {
-                if let newCipher = updated.ciphers.first(where: { $0.id == id }) {
-                    if let cipher = self.vault.vault.first(where: { $0.id == id }), let last1 = cipher.lastModified, let last2 = newCipher.lastModified, last1 > last2 {
-                        continue
-                    }
-                    
-                    try self.vault.addOrReplace(cipher: try LibrePassCipher(encCipher: newCipher, key: self.sharedKey!), toSync: false, save: false)
-                }
-            }
-            
-            for cipher in self.vault.vault {
-                if updated.ids.first(where: { $0 == cipher.id }) == nil {
-                    try self.vault.remove(cipher: cipher, save: false)
-                }
-            }
-            
-            self.vault.lastSync = Int64(Date().timeIntervalSince1970)
-            try self.vault.encryptVault().saveVault()
+            return updated
         }
+        
+        return nil
     }
     
-    mutating func put(encryptedCipher: LibrePassEncryptedCipher) throws {
-        if networkMonitor.isConnected {
-            try self.syncVault(request: SyncRequest(lastSyncTimestamp: -2, updated: [encryptedCipher], deleted: []))
-        } else {
-            try self.vault.addOrReplace(cipher: LibrePassCipher(encCipher: encryptedCipher, key: self.sharedKey!), toSync: true, save: true)
-        }
-    }
-    
-    mutating func put(cipher: LibrePassCipher) throws {
-        let encrypted = try LibrePassEncryptedCipher(cipher: cipher, key: self.sharedKey!)
-    
-        try self.put(encryptedCipher: encrypted)
-    }
-    
-    mutating func delete(id: String) throws {
-        if networkMonitor.isConnected {
-            try self.syncVault(request: SyncRequest(lastSyncTimestamp: -2, updated: [], deleted: [id]))
-        } else {
-            self.vault.idstoDelete.append(id)
-            try self.vault.remove(id: id, save: true)
-        }
-    }
-    
-    mutating func updateCredentials(email: String, password: String, passwordHint: String, oldSharedKey: String) throws {
+    mutating func updateCredentials(credentialsDatabase: LibrePassCredentialsDatabase, oldPassword: String, newEmail: String, newPassword: String?, newPasswordHint: String?, vault: [LibrePassEncryptedCipher]) throws {
         struct CompactCipher: Codable {
             var id: String
             var data: String
@@ -253,30 +171,31 @@ struct LibrePassClient {
             var ciphers: [CompactCipher]
         }
         
-        let (newPrivateData, newPublicData, newSharedData) = try self.getKeys(email: email, password: password, argon2options: self.credentialsDatabase!.argon2idParams)
-        
-        let vaultEncryptionKey = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: newPrivateData).sharedSecretFromKeyAgreement(with: try Curve25519.KeyAgreement.PublicKey(rawRepresentation: newPublicData)).withUnsafeBytes {
-            return Data(Array($0))
+        let (_, oldPublicData, oldSharedData) = try self.getKeys(email: credentialsDatabase.email, password: oldPassword, argon2options: credentialsDatabase.argon2idParams)
+        if dataToHexString(data: oldPublicData) != credentialsDatabase.publicKey {
+            throw LibrePassApiErrors.WithMessage(message: "Invalid credentials")
         }
         
-        var newVault = self.vault
-        newVault.key = SymmetricKey(data: vaultEncryptionKey)
+        let preLogin = try self.preLogin(email: newEmail)
+        let (newPrivateData, newPublicData, newSharedData) = try self.getKeys(email: newEmail, password: newPassword ?? oldPassword, argon2options: preLogin)
         
-        var encryptedVault = try newVault.encryptVault()
+        let vaultEncryptionKey = SymmetricKey(data: try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: newPrivateData).sharedSecretFromKeyAgreement(with: try Curve25519.KeyAgreement.PublicKey(rawRepresentation: newPublicData)))
+        
         var compactCiphers: [CompactCipher] = []
-        for j in encryptedVault.vault {
-            compactCiphers.append(CompactCipher(id: j.id, data: j.protectedData))
+        for j in vault {
+            let reencryptedCipher = try LibrePassEncryptedCipher(cipher: LibrePassCipher(encCipher: j, key: self.sharedKey!), key: vaultEncryptionKey)
+            compactCiphers.append(CompactCipher(id: reencryptedCipher.id, data: reencryptedCipher.protectedData))
         }
         
         var requestBody: Data
         var path: String
-        if email != self.credentialsDatabase!.email {
-            let requestStruct = LibrePassChangeEmailRequest(newEmail: email, oldSharedKey: oldSharedKey, newPublicKey: dataToHexString(data: newPublicData), newSharedKey: dataToHexString(data: newSharedData), ciphers: compactCiphers)
+        if newEmail != credentialsDatabase.email {
+            let requestStruct = LibrePassChangeEmailRequest(newEmail: newEmail, oldSharedKey: dataToHexString(data: oldSharedData), newPublicKey: dataToHexString(data: newPublicData), newSharedKey: dataToHexString(data: newSharedData), ciphers: compactCiphers)
             
             requestBody = try JSONEncoder().encode(requestStruct)
             path = "/api/user/email"
-        } else if dataToHexString(data: newSharedData) != oldSharedKey {
-            let requestStruct = LibrePassChangePasswordRequest(oldSharedKey: oldSharedKey, newPublicKey: dataToHexString(data: newPublicData), newSharedKey: dataToHexString(data: newSharedData), passwordHint: passwordHint, parallelism: self.credentialsDatabase!.argon2idParams.parallelism, memory: self.credentialsDatabase!.argon2idParams.memory, iterations: self.credentialsDatabase!.argon2idParams.iterations, ciphers: compactCiphers)
+        } else if let passwordHint = newPasswordHint, dataToHexString(data: newSharedData) != dataToHexString(data: oldSharedData) {
+            let requestStruct = LibrePassChangePasswordRequest(oldSharedKey: dataToHexString(data: oldSharedData), newPublicKey: dataToHexString(data: newPublicData), newSharedKey: dataToHexString(data: newSharedData), passwordHint: passwordHint, parallelism: preLogin.parallelism, memory: preLogin.memory, iterations: preLogin.iterations, ciphers: compactCiphers)
             
             requestBody = try JSONEncoder().encode(requestStruct)
             path = "/api/user/password"
@@ -287,15 +206,15 @@ struct LibrePassClient {
         _ = try self.client.request(path: path, body: requestBody, method: "PATCH")
     }
     
-    func deleteAccount(password: String) throws {
+    func deleteAccount(password: String, credentialsDatabase: LibrePassCredentialsDatabase) throws {
         struct LibrePassDeleteAccountRequest: Codable {
             var sharedKey: String
             var code: String
         }
         
-        let (_, oldPublicData, oldSharedData) = try self.getKeys(email: self.credentialsDatabase!.email, password: password, argon2options: self.credentialsDatabase!.argon2idParams)
+        let (_, oldPublicData, oldSharedData) = try self.getKeys(email: credentialsDatabase.email, password: password, argon2options: credentialsDatabase.argon2idParams)
         
-        if dataToHexString(data: oldPublicData) != self.credentialsDatabase!.publicKey {
+        if dataToHexString(data: oldPublicData) != credentialsDatabase.publicKey {
             throw LibrePassApiErrors.WithMessage(message: "Invalid credentials")
         }
         
@@ -305,9 +224,9 @@ struct LibrePassClient {
         _ = try self.client.request(path: "/api/user/delete", body: requestBody, method: "DELETE")
     }
     
-    func generateId() -> String {
+    func generateId(vault: [LibrePassEncryptedCipher]) -> String {
         var uuid = UUID().uuidString.lowercased()
-        while self.vault.vault.firstIndex(where: { cipher in cipher.id == uuid }) != nil {
+        while vault.firstIndex(where: { cipher in cipher.id == uuid }) != nil {
             uuid = UUID().uuidString.lowercased()
         }
         

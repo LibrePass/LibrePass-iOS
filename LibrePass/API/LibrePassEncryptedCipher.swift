@@ -8,7 +8,7 @@
 import Foundation
 import CryptoKit
 
-class LibrePassEncryptedCipher: Codable {
+struct LibrePassEncryptedCipher: Codable {
     var id: String
     var owner: String
     var type: Int

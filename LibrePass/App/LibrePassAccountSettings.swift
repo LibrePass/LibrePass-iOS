@@ -6,10 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 import CryptoKit
 
 struct LibrePassAccountSettings: View {
     @EnvironmentObject var context: LibrePassContext
+    
+    @Environment(\.modelContext) var modelContext
+    @Query var vault: [EncryptedCipherStorageItem]
+    @Query var credentialsDatabaseStorage: [CredentialsDatabaseStorageItem]
+    @Query var lastSyncStorage: [LastSyncStorage]
+    @Query var syncQueue: [SyncQueueItem]
     
     @State var password = String()
     @State var email = String()
@@ -37,36 +44,62 @@ struct LibrePassAccountSettings: View {
             Section(header: Text("Confirm action")) {
                 SecureField("Current password", text: self.$password)
                     .autocapitalization(.none)
-                ButtonWithSpinningWheel(text: "Update credentials", task: {
-                    if newPassword != newPasswordConfirm {
-                        throw LibrePassApiErrors.WithMessage(message: "Passwords doesn't match")
-                    }
-                    
-                    try self.context.updateCredentials(oldPassword: self.password, newPassword: self.newPassword, newPasswordHint: self.newPasswordHint, newEmail: self.email)
-                })
-                ButtonWithSpinningWheel(text: "Delete account", task: self.deleteAccount, color: Color.red)
+                ButtonWithSpinningWheel(text: "Update credentials", task: self.updateCredentials)
+                Button("Delete account", role: .destructive) {
+                    self.deleteAccount()
+                }
             }
             
             Section {
                 Button("Log out", role: .destructive) {
-                    self.context.logOut()
+                    self.logOut()
                 }
             }
-        }
-        
-        .alert("Operation is finished. You'll be logged out. If you've changed email address, check your mailbox and verify email address", isPresented: self.$done) {
-            Button("OK") {
-                self.context.logOut()
+            
+            .alert("Operation is finished. You'll be logged out. If you've changed email address, check your mailbox and verify email address",isPresented: self.$done) {
+                Button("OK") {
+                    self.logOut()
+                }
             }
-        }
-        
-        .onAppear {
-            self.email = self.context.lClient!.credentialsDatabase!.email
+            
+            .onAppear {
+                self.email = self.context.credentialsDatabase!.email
+            }
         }
     }
     
-    func deleteAccount() throws {
-        try self.context.lClient!.deleteAccount(password: self.password)
-        self.context.logOut()
+    func logOut() {
+        do {
+            try modelContext.delete(model: CredentialsDatabaseStorageItem.self)
+            try modelContext.delete(model: EncryptedCipherStorageItem.self)
+            try modelContext.delete(model: SyncQueueItem.self)
+            try modelContext.delete(model: LastSyncStorage.self)
+            
+            self.context.loggedIn = false
+            self.context.locallyLoggedIn = false
+            self.context.lClient = nil
+        } catch {
+            
+        }
+    }
+    
+    func updateCredentials() throws {
+        if newPassword != "" && newPassword != newPasswordConfirm {
+            throw LibrePassApiErrors.WithMessage(message: "Passwords doesn't match")
+        }
+        
+        try self.context.lClient!.updateCredentials(credentialsDatabase: self.credentialsDatabaseStorage[0].credentialsDatabase, oldPassword: password, newEmail: email, newPassword: (newPassword == "") ? nil : newPassword, newPasswordHint: newPasswordHint, vault: self.vault.toEncryptedVault())
+        
+        self.done = true
+    }
+    
+    func deleteAccount() {
+        do {
+            try self.context.lClient!.deleteAccount(password: self.password, credentialsDatabase: self.credentialsDatabaseStorage[0].credentialsDatabase)
+            
+            self.done = true
+        } catch {
+            
+        }
     }
 }

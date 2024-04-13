@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LibrePassLocalLogin: View {
     @EnvironmentObject var context: LibrePassContext
+    
+    @Environment(\.modelContext) var modelContext
+    @Query var credentials: [CredentialsDatabaseStorageItem]
+    @Query var vault: [EncryptedCipherStorageItem]
+    @Query var lastSyncStorage: [LastSyncStorage]
+    @Query var syncQueue: [SyncQueueItem]
     
     @State private var password = String()
     
@@ -21,17 +28,23 @@ struct LibrePassLocalLogin: View {
             Section(header: Text("Login")) {
                 SecureField("Password", text: $password)
                     .autocapitalization(.none)
-                ButtonWithSpinningWheel(text: "Unlock vault", task: { try self.context.localLogIn(password: self.password) })
-            }
-            
-            Section(header: Text("WARNING! THIS WILL DELETE VAULT SAVED ON THE DISK, but can fix crashes")) {
-                ButtonWithSpinningWheel(text: "Clear vault", task: { try self.context.clearVault(password: self.password )}, color: Color.red)
+                ButtonWithSpinningWheel(text: "Unlock vault", task: { try self.context.localLogIn(password: self.password, credentialsDatabase: credentials[0].credentialsDatabase) })
             }
         }
         
         .alert("Token has expired. You must relogin to use LibrePass", isPresented: self.$tokenExpired) {
             Button("OK", role: .cancel) {
-                self.context.lClient!.logOut()
+                do {
+                    try modelContext.delete(model: CredentialsDatabaseStorageItem.self)
+                    try modelContext.delete(model: EncryptedCipherStorageItem.self)
+                    try modelContext.delete(model: SyncQueueItem.self)
+                    try modelContext.delete(model: LastSyncStorage.self)
+                    
+                    self.context.locallyLoggedIn = false
+                    self.context.lClient = nil
+                } catch {
+                    
+                }
             }
         }
     }

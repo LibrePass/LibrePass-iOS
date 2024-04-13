@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct LibrePassApp: App {
@@ -13,16 +14,19 @@ struct LibrePassApp: App {
         WindowGroup {
             MainWindow()
         }
+        .modelContainer(for: [CredentialsDatabaseStorageItem.self, EncryptedCipherStorageItem.self, LastSyncStorage.self, SyncQueueItem.self])
     }
 }
 
 struct MainWindow: View {
-    @StateObject var context: LibrePassContext = LibrePassContext(loggedIn: false, locallyLoggedIn: LibrePassCredentialsDatabase.isLocallyLoggedIn())
+    @Query var credentials: [CredentialsDatabaseStorageItem]
+    
+    @StateObject var context: LibrePassContext = LibrePassContext()
     @State var showAbout = false
     
     var body: some View {
         HStack {
-            if self.context.loggedIn {
+            if self.context.lClient != nil && self.context.loggedIn {
                 LibrePassManagerWindow()
             } else if self.context.locallyLoggedIn {
                 LibrePassLocalLogin()
@@ -47,6 +51,11 @@ struct MainWindow: View {
             }
         }
         .environmentObject(context)
+        .onAppear {
+            if credentials.count > 0 {
+                self.context.locallyLoggedIn = true
+            }
+        }
         
         .sheet(isPresented: self.$showAbout) {
             VStack {
@@ -75,4 +84,5 @@ struct MainWindow: View {
 
 //#Preview {
 //    MainWindow()
+//        .modelContainer(for: [EncryptedCipherStorageItem.self, CredentialsDatabaseStorageItem.self, LastSyncStorage.self, SyncQueueItem.self])
 //}

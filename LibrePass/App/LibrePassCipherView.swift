@@ -7,17 +7,33 @@
 
 import SwiftUI
 import SwiftOTP
+import SwiftData
 
 struct CipherView: View {
     @EnvironmentObject var context: LibrePassContext
     
+    @Query var vault: [EncryptedCipherStorageItem]
+    @Query var queue: [SyncQueueItem]
+    @Environment(\.modelContext) var modelContext
     var cipher: LibrePassCipher
-    var index: Int
+    var sync: () throws -> ()
     
     func save(cipher: LibrePassCipher) {
         do {
             cipher.lastModified = Int64(Date().timeIntervalSince1970)
-            try self.context.lClient!.put(cipher: cipher)
+            let encrypted = EncryptedCipherStorageItem(encryptedCipher: try LibrePassEncryptedCipher(cipher: cipher, key: self.context.lClient!.sharedKey!))
+            
+            modelContext.insert(SyncQueueItem(operation: .Push(cipher: encrypted.encryptedCipher), id: cipher.id))
+            
+            if networkMonitor.isConnected {
+                try self.sync()
+            } else {
+                for (index, item) in self.vault.enumerated() {
+                    if item.encryptedCipher.id == encrypted.encryptedCipher.id {
+                        self.vault[index].encryptedCipher = encrypted.encryptedCipher
+                    }
+                }
+            }
         } catch {
             
         }
@@ -26,18 +42,17 @@ struct CipherView: View {
     var body: some View {
         switch self.cipher.type {
         case LibrePassCipher.CipherType.Login:
-            CipherLoginDataView(cipher: self.cipher, index: index, save: save)
+            CipherLoginDataView(cipher: self.cipher, save: save)
         case LibrePassCipher.CipherType.SecureNote:
-            CipherSecureNoteView(cipher: self.cipher, index: index, save: save)
+            CipherSecureNoteView(cipher: self.cipher, save: save)
         case LibrePassCipher.CipherType.Card:
-            CipherCardDataView(cipher: self.cipher, index: index, save: save)
+            CipherCardDataView(cipher: self.cipher, save: save)
         }
     }
 }
 
 struct CipherLoginDataView: View {
     var cipher: LibrePassCipher
-    var index: Int
     var save: (_ save: LibrePassCipher) -> ()
     
     @State var showPassword: Bool = false
@@ -256,7 +271,6 @@ struct CipherLoginDataView: View {
 
 struct CipherSecureNoteView: View {
     var cipher: LibrePassCipher
-    var index: Int
     var save: (_ cipher: LibrePassCipher) -> ()
     @State var title: String = String()
     @State var note: String = String()
@@ -284,7 +298,6 @@ struct CipherSecureNoteView: View {
 
 struct CipherCardDataView: View {
     var cipher: LibrePassCipher
-    var index: Int
     var save: (_ cipher: LibrePassCipher) -> ()
     
     @State var name = String()
