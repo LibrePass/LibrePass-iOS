@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol AuthenticationFormProtocol {
+    var formIsValid: Bool { get }
+}
+
 class AuthViewModel: ObservableObject {
     @Published var isLoggedIn = false
 //    

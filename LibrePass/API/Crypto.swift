@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SignalArgon2
+import Argon2Swift
 import CryptoKit
 
 struct Argon2IdOptions: Codable {
@@ -17,9 +17,24 @@ struct Argon2IdOptions: Codable {
 }
 
 func argon2Hash(email: String, password: String, hashOptions: Argon2IdOptions) throws -> Data {
-    let (rawHash, _) = try Argon2.hash(iterations: UInt32(hashOptions.iterations), memoryInKiB: UInt32(hashOptions.memory), threads: UInt32(hashOptions.parallelism), password: password.data(using: .utf8)!, salt: email.data(using: .utf8)!, desiredLength: 32, variant: .id, version: .v13)
+//    let (rawHash, _) = try Argon2.hash(iterations: UInt32(hashOptions.iterations), memoryInKiB: UInt32(hashOptions.memory), threads: UInt32(hashOptions.parallelism), password: password.data(using: .utf8)!, salt: email.data(using: .utf8)!, desiredLength: 32, variant: .id, version: .v13)
+//    
+//    return rawHash
     
-    return rawHash
+    do {
+        let privateKeyData = try Argon2Swift.hashPasswordBytes(password: "pass".data(using: .utf8)!, salt: Salt(bytes: "ashdoahdfvo".data(using: .utf8)!), iterations: 3, memory: 65536, parallelism: 1, type: .id, version: .V13)
+        
+        let privatekey = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: privateKeyData.hashData())
+        let publickey = privatekey.publicKey
+        
+        
+        
+        
+    } catch {
+        print("Hash Error")
+    }
+        
+    return Data()
 }
 
 func dataToHexString(data: Data) -> String {

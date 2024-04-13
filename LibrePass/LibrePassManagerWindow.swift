@@ -30,13 +30,13 @@ struct LibrePassManagerWindow: View {
                 ForEach(self.lClient.vault.vault, id: \.self.id) { cipher in
                     let index = lClient.vault.vault.firstIndex(where: { vaultCipher in vaultCipher.id == cipher.id })!
                     
-                    NavigationLink(destination: CipherView(lClient: $lClient, cipher: cipher, index: index)) {
-                        HStack {
-                            CipherButton(cipher: cipher)
-                            
-                            Spacer()
-                        }
-                    }
+//                    NavigationLink(destination: CipherView(lClient: $lClient, cipher: cipher, index: index)) {
+//                        HStack {
+//                            CipherButton(cipher: cipher)
+//                            
+//                            Spacer()
+//                        }
+//                    }
                 }
                 .onDelete { indexSet in
                     self.toDelete = indexSet

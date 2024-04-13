@@ -1,5 +1,5 @@
 //
-//  MainWindow.swift
+//  ContentView.swift
 //  LibrePass
 //
 //  Created by Nish on 2024-04-06.
@@ -20,7 +20,7 @@ struct ContentView: View {
                     .frame(width: 128, height: 128)
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                 
-                Text("Welcome to LibrePass")
+                Text("LibrePass")
                     .padding(.top, 20)
                 
                 NavigationLink(destination: SignupView()) {

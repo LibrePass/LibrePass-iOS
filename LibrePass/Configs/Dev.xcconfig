@@ -1,0 +1,11 @@
+//
+//  Dev.xcconfig
+//  LibrePass
+//
+//  Created by Nish on 2024-04-12.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+ROOT_URL=https:/$()/api.test.librepass.medzik.dev

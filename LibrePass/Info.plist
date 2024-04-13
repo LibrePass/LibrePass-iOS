@@ -4,5 +4,7 @@
 <dict>
 	<key>ROOT_URL</key>
 	<string>${ROOT_URL}</string>
+	<key></key>
+	<string></string>
 </dict>
 </plist>
