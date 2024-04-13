@@ -21,17 +21,15 @@ struct SignupView: View {
     
     var body: some View {
         VStack {
-            Spacer()
-            
             Image(uiImage: UIImage(named: AppIconProvider.appIcon())!)
                 .resizable()
                 .frame(width: 128, height: 128)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
             
-            Spacer()
+            Text("LibrePass")
+                .font(.title)
             
             VStack(spacing: 24) {
-                
                 InputView(text: $email, title: "Email Address", placeholder: "name@example.com")
                     .autocapitalization(.none)
                 
@@ -95,6 +93,20 @@ struct SignupView: View {
             .disabled(!formIsValid)
             .opacity(formIsValid ? 1.0 : 0.5 )
             .cornerRadius(10)
+            .padding(.top, 24)
+            
+            Button {
+                dismiss()
+                
+            } label: {
+                HStack(spacing: 2) {
+                    Text("Already have an account?")
+                    Text("Sign in")
+                        .fontWeight(.bold)
+                }
+                .font(.system(size: 16))
+                
+            }
             .padding()
         }
         .sheet(isPresented: $showSelfHostedView) {
