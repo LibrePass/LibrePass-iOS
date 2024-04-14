@@ -16,7 +16,7 @@ struct SignupView: View {
     @State private var server = CustomEnvironment.rootURL
     @State private var showSelfHostedView = false
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var viewModel: AuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     
     var body: some View {
@@ -109,6 +109,7 @@ struct SignupView: View {
             }
             .padding()
         }
+        .navigationTitle("Register")
         .sheet(isPresented: $showSelfHostedView) {
             NavigationStack {
                 ServerURLView(serverURL: $server, isPresented: $showSelfHostedView)

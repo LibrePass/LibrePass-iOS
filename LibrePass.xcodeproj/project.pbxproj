@@ -13,6 +13,9 @@
 		174EA0982BC3609E00084D2C /* Argon2Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 174EA0972BC3609E00084D2C /* Argon2Swift */; };
 		175190532BCA3EEB0076460A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175190522BCA3EEB0076460A /* HomeView.swift */; };
 		176A30622BC1C103005C143E /* CustomEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176A30612BC1C103005C143E /* CustomEnvironment.swift */; };
+		177B62CC2BCB14DF003EBC65 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 177B62CB2BCB14DF003EBC65 /* Alamofire */; };
+		177B62CE2BCB14DF003EBC65 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 177B62CD2BCB14DF003EBC65 /* AlamofireDynamic */; };
+		177B62D02BCB78B1003EBC65 /* PreLoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177B62CF2BCB78B1003EBC65 /* PreLoginResponse.swift */; };
 		179E981C2BC1DDBB00D71ACA /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179E981B2BC1DDBB00D71ACA /* AuthViewModel.swift */; };
 		B23D44F82BA62C6B00097960 /* OATH.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D44F72BA62C6B00097960 /* OATH.swift */; };
 		B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */; };
@@ -46,6 +49,7 @@
 		175190522BCA3EEB0076460A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		176A30612BC1C103005C143E /* CustomEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEnvironment.swift; sourceTree = "<group>"; };
 		176A306A2BC1C8D8005C143E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		177B62CF2BCB78B1003EBC65 /* PreLoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLoginResponse.swift; sourceTree = "<group>"; };
 		179E981B2BC1DDBB00D71ACA /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		B23D44F72BA62C6B00097960 /* OATH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OATH.swift; sourceTree = "<group>"; };
 		B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrePassAccountSettings.swift; sourceTree = "<group>"; };
@@ -60,7 +64,6 @@
 		B253F1D42B83942B00D048F9 /* Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
 		B253F1D52B83942B00D048F9 /* LibrePassCipher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassCipher.swift; sourceTree = "<group>"; };
 		B253F1D62B83942B00D048F9 /* LibrePassEncryptedCipher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassEncryptedCipher.swift; sourceTree = "<group>"; };
-		B253F1E22B8394EE00D048F9 /* LibrePass-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LibrePass-Bridging-Header.h"; sourceTree = "<group>"; };
 		B253F1E32B83976900D048F9 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B2780F052B8A43C200835EE3 /* LibrePassRegistrationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrePassRegistrationWindow.swift; sourceTree = "<group>"; };
 		B28808902B9254E300A526C6 /* PasswordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGenerator.swift; sourceTree = "<group>"; };
@@ -78,6 +81,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				174EA0982BC3609E00084D2C /* Argon2Swift in Frameworks */,
+				177B62CE2BCB14DF003EBC65 /* AlamofireDynamic in Frameworks */,
+				177B62CC2BCB14DF003EBC65 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				179E981B2BC1DDBB00D71ACA /* AuthViewModel.swift */,
+				177B62CF2BCB78B1003EBC65 /* PreLoginResponse.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -190,14 +196,13 @@
 		B2D91A172B8393C60004561A /* LibrePass */ = {
 			isa = PBXGroup;
 			children = (
-				1742993D2BC9D070008B639D /* Configs */,
 				B2D444772B87CFF00031A685 /* API */,
 				179E98132BC1DAB900D71ACA /* App */,
 				B2D91A1C2B8393C70004561A /* Assets.xcassets */,
+				1742993D2BC9D070008B639D /* Configs */,
 				179E98142BC1DAC200D71ACA /* Core */,
 				176A30612BC1C103005C143E /* CustomEnvironment.swift */,
 				176A306A2BC1C8D8005C143E /* Info.plist */,
-				B253F1E22B8394EE00D048F9 /* LibrePass-Bridging-Header.h */,
 				B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */,
 				B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */,
 				B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */,
@@ -236,6 +241,8 @@
 			name = LibrePass;
 			packageProductDependencies = (
 				174EA0972BC3609E00084D2C /* Argon2Swift */,
+				177B62CB2BCB14DF003EBC65 /* Alamofire */,
+				177B62CD2BCB14DF003EBC65 /* AlamofireDynamic */,
 			);
 			productName = LibrePass;
 			productReference = B2D91A152B8393C60004561A /* LibrePass.app */;
@@ -268,6 +275,7 @@
 			mainGroup = B2D91A0C2B8393C60004561A;
 			packageReferences = (
 				174EA0962BC3609E00084D2C /* XCRemoteSwiftPackageReference "Argon2Swift" */,
+				177B62CA2BCB14DF003EBC65 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = B2D91A162B8393C60004561A /* Products */;
 			projectDirPath = "";
@@ -298,6 +306,7 @@
 			files = (
 				B253F1E02B83942B00D048F9 /* LibrePassCipher.swift in Sources */,
 				B28808912B9254E300A526C6 /* PasswordGenerator.swift in Sources */,
+				177B62D02BCB78B1003EBC65 /* PreLoginResponse.swift in Sources */,
 				B2DD90712B8D10D4003D84B7 /* NetworkMonitor.swift in Sources */,
 				B253F1DC2B83942B00D048F9 /* LibrePassAPI.swift in Sources */,
 				B253F1D92B83942B00D048F9 /* LibrePassLoginWindow.swift in Sources */,
@@ -419,7 +428,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -427,7 +436,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "LibrePass/LibrePass-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug(Prod)";
 		};
@@ -517,14 +526,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LibrePass/LibrePass-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Release(Prod)";
 		};
@@ -678,7 +687,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -686,7 +695,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "LibrePass/LibrePass-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug(Dev)";
 		};
@@ -719,14 +728,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.zapomnij.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LibrePass/LibrePass-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Release(Dev)";
 		};
@@ -766,6 +775,14 @@
 				kind = branch;
 			};
 		};
+		177B62CA2BCB14DF003EBC65 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -773,6 +790,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 174EA0962BC3609E00084D2C /* XCRemoteSwiftPackageReference "Argon2Swift" */;
 			productName = Argon2Swift;
+		};
+		177B62CB2BCB14DF003EBC65 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 177B62CA2BCB14DF003EBC65 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		177B62CD2BCB14DF003EBC65 /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 177B62CA2BCB14DF003EBC65 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
