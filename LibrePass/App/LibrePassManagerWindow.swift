@@ -27,6 +27,8 @@ struct LibrePassManagerWindow: View {
     @Query var syncQueue: [SyncQueueItem]
     @Query var lastStorageItem: [LastSyncStorage]
     
+    @State var searchQuery: String = ""
+    
     var body: some View {
         NavigationView {
             List {
@@ -34,7 +36,7 @@ struct LibrePassManagerWindow: View {
                     ForEach(vault, id: \.self.id) { encCipher in
                         let cipher = try? LibrePassCipher(encCipher: encCipher.encryptedCipher, key: self.context.lClient!.sharedKey!)
                         
-                        if let cipher = cipher {
+                        if let cipher = cipher, self.searchQuery == "" || (self.searchQuery != "" && cipher.contains(query: self.searchQuery)) {
                             NavigationLink(destination: CipherView(cipher: cipher, sync: self.syncVault)) {
                                 HStack {
                                     CipherButton(cipher: cipher)
@@ -52,6 +54,7 @@ struct LibrePassManagerWindow: View {
             }
             
             .navigationTitle("Vault")
+            .searchable(text: self.$searchQuery)
             .toolbar {
                 HStack {
                     SpinningWheel(isPresented: self.$deletionIndicator, task: self.deleteCiphers)

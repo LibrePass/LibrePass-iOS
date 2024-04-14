@@ -71,6 +71,13 @@ class LibrePassCipher: Codable {
         }
     }
     
+    func contains(query: String) -> Bool {
+        return self.id == query ||
+        (self.type == .Login) ? self.loginData!.name.contains(query) || self.loginData!.username?.contains(query) ?? false || self.loginData!.uris?.filter({ $0.contains(query) }).count ?? 0 > 0 || self.loginData!.notes?.contains(query) ?? false:
+        (self.type == .SecureNote) ? self.secureNoteData!.title.contains(query) || self.secureNoteData!.note.contains(query) :
+        self.cardData!.name.contains(query) || self.cardData!.cardholderName.contains(query) || self.cardData!.notes?.contains(query) ?? false
+    }
+    
     enum CipherType: Int, Codable {
         case Login = 0
         case SecureNote
@@ -119,21 +126,5 @@ class LibrePassCipher: Codable {
     struct PasswordHistory: Codable {
         var password: String
         var lastUsed: Int
-    }
-}
-
-extension [LibrePassEncryptedCipher] {
-    mutating func addOrReplace(cipher: LibrePassEncryptedCipher) {
-        if let index = self.firstIndex(where: { cipher.id == $0.id }) {
-            self[index] = cipher
-        } else {
-            self.append(cipher)
-        }
-    }
-    
-    mutating func delete(id: String) {
-        if let index = self.firstIndex(where: { id == $0.id }) {
-            self.remove(at: index)
-        }
     }
 }
