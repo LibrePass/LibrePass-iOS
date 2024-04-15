@@ -24,16 +24,13 @@ struct CipherView: View {
             let encrypted = EncryptedCipherStorageItem(encryptedCipher: try LibrePassEncryptedCipher(cipher: cipher, key: self.context.lClient!.sharedKey!))
             
             modelContext.insert(SyncQueueItem(operation: .Push(cipher: encrypted.encryptedCipher), id: cipher.id))
-            
-            if networkMonitor.isConnected {
-                try self.sync()
-            } else {
-                for (index, item) in self.vault.enumerated() {
-                    if item.encryptedCipher.id == encrypted.encryptedCipher.id {
-                        self.vault[index].encryptedCipher = encrypted.encryptedCipher
-                    }
+            for (index, item) in self.vault.enumerated() {
+                if item.encryptedCipher.id == encrypted.encryptedCipher.id {
+                    self.vault[index].encryptedCipher = encrypted.encryptedCipher
                 }
             }
+            
+            try self.sync()
         } catch {
             
         }
