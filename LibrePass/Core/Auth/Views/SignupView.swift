@@ -78,7 +78,7 @@ struct SignupView: View {
             
             Button {
                 Task {
-                    
+                    try await authViewModel.signUp(withEmail: email, password: password)
                 }
             } label: {
                 HStack {
@@ -125,7 +125,6 @@ extension SignupView: AuthenticationFormProtocol {
         && !password.isEmpty
         && confirmPassword == password
         && password.count > 7
-        && !fullname.isEmpty
     }
 }
 

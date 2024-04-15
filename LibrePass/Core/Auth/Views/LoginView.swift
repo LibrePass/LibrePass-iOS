@@ -10,6 +10,8 @@ import SwiftUI
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
+    @State private var server = CustomEnvironment.rootURL
+    @State private var showSelfHostedView = false
     @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
@@ -28,6 +30,23 @@ struct LoginView: View {
                         .autocapitalization(.none)
                     
                     InputView(text: $password, title: "Password", placeholder: "Enter your password", isSecureField: true)
+                    
+                    HStack {
+                        Text ("Server Address")
+                            .font(.footnote)
+                        
+                        Spacer()
+                        
+                        Picker("Server Address", selection: $server) {
+                            Text("Official").tag(CustomEnvironment.rootURL)
+                            Text("Self-Hosted").tag("")
+                        }
+                        .onChange(of: server) { newState in
+                            if newState == "" {
+                                showSelfHostedView = true
+                            }
+                        }
+                    }
                 }
                 .padding(.horizontal)
                 .padding(.top, 12)
@@ -51,18 +70,43 @@ struct LoginView: View {
             .opacity(formIsValid ? 1.0 : 0.5 )
             .cornerRadius(10)
             .padding(.top, 24)
+            
+            
+            if authViewModel.biometricType() != .none {
+                Button {
+                    authViewModel.requestBiometricUnlock { (result: Result<Credentials, AuthViewModel.AuthenticationError>) in
+                        switch result {
+                        case .success(let credentials):
+                            <#code#>
+                        case .failure(let error):
+                            <#code#>
+                        }
                         
-            NavigationLink {
-                SignupView()
-            } label: {
-                HStack(spacing: 2) {
-                    Text("Don't have an account?")
-                    Text("Sign up")
-                        .fontWeight(.bold)
+                    } label: {
+                        Image(systemName: authViewModel.biometricType() == .face ? "faceid" : "touchid")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .padding()
+                    }
                 }
-                .font(.system(size: 16))
+                
+                NavigationLink {
+                    SignupView()
+                } label: {
+                    HStack(spacing: 2) {
+                        Text("Don't have an account?")
+                        Text("Sign up")
+                            .fontWeight(.bold)
+                    }
+                    .font(.system(size: 16))
+                }
+                .padding()
             }
-            .padding()
+                .sheet(isPresented: $showSelfHostedView) {
+                    NavigationStack {
+                        ServerURLView(serverURL: $server, isPresented: $showSelfHostedView)
+                    }
+                }
         }
     }
 }
