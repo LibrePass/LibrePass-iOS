@@ -18,6 +18,8 @@ protocol AuthenticationFormProtocol {
 
 class AuthViewModel: ObservableObject {
     @Published var isLoggedIn = false
+    @Published var error: AuthenticationError?
+    
     let endpoint = "/api/auth"
     
     
@@ -119,8 +121,6 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    
-    
     private func login(withEmail email: String, password: String) async throws {
         let preLoginData = try await preLogin(email: email)
         
@@ -204,7 +204,16 @@ class AuthViewModel: ObservableObject {
     
     func requestBiometricUnlock(completion: @escaping (Result<Credentials, AuthenticationError>) -> Void) {
         let credentials: Credentials? = nil
-        
+//        let credentials: Credentials? = Credentials(
+//            userId: UUID(),
+//            email: "test",
+//            apiKey: "apikey",
+//            publicKey: "publickey",
+//            memory: 64950,
+//            iterations: 3,
+//            parallelism: 3
+//        )
+
         guard let credentials = credentials else {
             completion(.failure(.credentialsNotSaved))
             return

@@ -74,39 +74,52 @@ struct LoginView: View {
             
             if authViewModel.biometricType() != .none {
                 Button {
-                    authViewModel.requestBiometricUnlock { (result: Result<Credentials, AuthViewModel.AuthenticationError>) in
+                    authViewModel.requestBiometricUnlock {
+                        (result: Result<Credentials, AuthViewModel.AuthenticationError>) in
                         switch result {
                         case .success(let credentials):
-                            <#code#>
+                            authViewModel.isLoggedIn = true
                         case .failure(let error):
-                            <#code#>
+                            authViewModel.error = error
                         }
-                        
-                    } label: {
-                        Image(systemName: authViewModel.biometricType() == .face ? "faceid" : "touchid")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .padding()
                     }
-                }
-                
-                NavigationLink {
-                    SignupView()
                 } label: {
-                    HStack(spacing: 2) {
-                        Text("Don't have an account?")
-                        Text("Sign up")
-                            .fontWeight(.bold)
-                    }
-                    .font(.system(size: 16))
+                    Image(systemName: authViewModel.biometricType() == .face ? "faceid" : "touchid")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .padding()
                 }
-                .padding()
             }
-                .sheet(isPresented: $showSelfHostedView) {
-                    NavigationStack {
-                        ServerURLView(serverURL: $server, isPresented: $showSelfHostedView)
-                    }
+            
+            
+            NavigationLink {
+                SignupView()
+            } label: {
+                HStack(spacing: 2) {
+                    Text("Don't have an account?")
+                    Text("Sign up")
+                        .fontWeight(.bold)
                 }
+                .font(.system(size: 16))
+            }
+            .padding()
+        }
+        .alert(item: $authViewModel.error) { error in
+            if error == .credentialsNotSaved {
+                return Alert(
+                    title: Text("Credentials Not Saved"),
+                    message: Text(error.localizedDescription),
+                    primaryButton: .default(Text("OK"), action: {}),
+                    secondaryButton: .cancel()
+                )
+            } else {
+                return Alert(title: Text("Invalid Login"), message: Text(error.localizedDescription))
+            }
+        }
+        .sheet(isPresented: $showSelfHostedView) {
+            NavigationStack {
+                ServerURLView(serverURL: $server, isPresented: $showSelfHostedView)
+            }
         }
     }
 }
