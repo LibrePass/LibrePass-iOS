@@ -25,8 +25,6 @@
 		B23D44F82BA62C6B00097960 /* OATH.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D44F72BA62C6B00097960 /* OATH.swift */; };
 		B25257BB2B91149D0028ABF3 /* LibrePassAccountSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */; };
 		B253F1D72B83942B00D048F9 /* LibrePassCipherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */; };
-		B253F1D82B83942B00D048F9 /* LibrePassLocalLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */; };
-		B253F1D92B83942B00D048F9 /* LibrePassLoginWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1CE2B83942B00D048F9 /* LibrePassLoginWindow.swift */; };
 		B253F1DA2B83942B00D048F9 /* LibrePassManagerWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1CF2B83942B00D048F9 /* LibrePassManagerWindow.swift */; };
 		B253F1DB2B83942B00D048F9 /* CredentialsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1D02B83942B00D048F9 /* CredentialsDatabase.swift */; };
 		B253F1DC2B83942B00D048F9 /* LibrePassAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B253F1D12B83942B00D048F9 /* LibrePassAPI.swift */; };
@@ -63,8 +61,6 @@
 		B23D44F72BA62C6B00097960 /* OATH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OATH.swift; sourceTree = "<group>"; };
 		B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrePassAccountSettings.swift; sourceTree = "<group>"; };
 		B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassCipherView.swift; sourceTree = "<group>"; };
-		B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassLocalLogin.swift; sourceTree = "<group>"; };
-		B253F1CE2B83942B00D048F9 /* LibrePassLoginWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassLoginWindow.swift; sourceTree = "<group>"; };
 		B253F1CF2B83942B00D048F9 /* LibrePassManagerWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassManagerWindow.swift; sourceTree = "<group>"; };
 		B253F1D02B83942B00D048F9 /* CredentialsDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialsDatabase.swift; sourceTree = "<group>"; };
 		B253F1D12B83942B00D048F9 /* LibrePassAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassAPI.swift; sourceTree = "<group>"; };
@@ -227,8 +223,6 @@
 				176A306A2BC1C8D8005C143E /* Info.plist */,
 				B25257BA2B91149D0028ABF3 /* LibrePassAccountSettings.swift */,
 				B253F1CC2B83942B00D048F9 /* LibrePassCipherView.swift */,
-				B253F1CD2B83942B00D048F9 /* LibrePassLocalLogin.swift */,
-				B253F1CE2B83942B00D048F9 /* LibrePassLoginWindow.swift */,
 				B253F1CF2B83942B00D048F9 /* LibrePassManagerWindow.swift */,
 				B2780F052B8A43C200835EE3 /* LibrePassRegistrationWindow.swift */,
 				B2D91A1E2B8393C70004561A /* Preview Content */,
@@ -335,7 +329,6 @@
 				177B62D02BCB78B1003EBC65 /* PreLoginResponse.swift in Sources */,
 				B2DD90712B8D10D4003D84B7 /* NetworkMonitor.swift in Sources */,
 				B253F1DC2B83942B00D048F9 /* LibrePassAPI.swift in Sources */,
-				B253F1D92B83942B00D048F9 /* LibrePassLoginWindow.swift in Sources */,
 				B253F1D72B83942B00D048F9 /* LibrePassCipherView.swift in Sources */,
 				B253F1DF2B83942B00D048F9 /* Crypto.swift in Sources */,
 				B253F1DE2B83942B00D048F9 /* ApiClient.swift in Sources */,
@@ -345,7 +338,6 @@
 				17B4516D2BCC832900C5E1AE /* UserCredentialResponse.swift in Sources */,
 				B253F1DD2B83942B00D048F9 /* LibrePassApp.swift in Sources */,
 				B28E06202B8BBD1900F48661 /* Utils.swift in Sources */,
-				B253F1D82B83942B00D048F9 /* LibrePassLocalLogin.swift in Sources */,
 				17349C0D2BC1E19D00452814 /* ContentView.swift in Sources */,
 				17B451722BCD866900C5E1AE /* RegisterRequest.swift in Sources */,
 				B23D44F82BA62C6B00097960 /* OATH.swift in Sources */,
