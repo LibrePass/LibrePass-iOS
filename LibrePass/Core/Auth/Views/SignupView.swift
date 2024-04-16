@@ -13,8 +13,10 @@ struct SignupView: View {
     @State private var fullname = ""
     @State private var password = ""
     @State private var confirmPassword = ""
-    @State private var server = CustomEnvironment.rootURL
-    @State private var showSelfHostedView = false
+    @State private var customServerURL = ""
+    @State private var isShowingCustomURLSheet = false
+    @State private var selectedServerType: ServerType = .official
+    
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel: AuthViewModel
     
@@ -60,13 +62,17 @@ struct SignupView: View {
                     
                     Spacer()
                     
-                    Picker("Server Address", selection: $server) {
-                        Text("Official").tag(CustomEnvironment.rootURL)
-                        Text("Self-Hosted").tag("")
+                    Picker("Server Type", selection: $selectedServerType) {
+                        Text("Official").tag(ServerType.official)
+                        Text("Self-Hosted").tag(ServerType.selfHosted)
                     }
-                    .onChange(of: server) { newState in
-                        if newState == "" {
-                            showSelfHostedView = true
+                    .padding()
+                    .onChange(of: selectedServerType) { oldValue, newValue in
+                        if newValue == .selfHosted {
+                            isShowingCustomURLSheet = true
+                        } else {
+                            isShowingCustomURLSheet = false
+                            customServerURL = CustomEnvironment.rootURL
                         }
                     }
                 }
@@ -110,9 +116,9 @@ struct SignupView: View {
             .padding()
         }
         .navigationTitle("Register")
-        .sheet(isPresented: $showSelfHostedView) {
+        .sheet(isPresented: $isShowingCustomURLSheet) {
             NavigationStack {
-                ServerURLView(serverURL: $server, isPresented: $showSelfHostedView)
+                ServerURLView(serverURL: $customServerURL, isPresented: $isShowingCustomURLSheet)
             }
         }
     }
@@ -169,11 +175,17 @@ struct ServerURLView: View {
             }
             .navigationTitle("Self-Hosted")
             .navigationBarItems(trailing: Button("Done") {
-                isPresented.toggle()
+                UserDefaults.standard.set(serverURL, forKey: "SelfHostedURL")
+                isPresented = false
             })
         }
         .background(Color(.systemGray6).ignoresSafeArea())
     }
+}
+
+enum ServerType {
+    case official
+    case selfHosted
 }
 
 #Preview {

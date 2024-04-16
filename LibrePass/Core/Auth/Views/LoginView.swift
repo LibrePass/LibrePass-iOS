@@ -10,8 +10,10 @@ import SwiftUI
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
-    @State private var server = CustomEnvironment.rootURL
-    @State private var showSelfHostedView = false
+    @State private var customServerURL = ""
+    @State private var isShowingCustomURLSheet = false
+    @State private var selectedServerType: ServerType = .official
+
     @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
@@ -37,15 +39,18 @@ struct LoginView: View {
                         
                         Spacer()
                         
-                        Picker("Server Address", selection: $server) {
-                            Text("Official").tag(CustomEnvironment.rootURL)
-                            Text("Self-Hosted").tag("")
+                        Picker("Server Type", selection: $selectedServerType) {
+                            Text("Official").tag(ServerType.official)
+                            Text("Self-Hosted").tag(ServerType.selfHosted)
                         }
-                        .onChange(of: server) { newState in
-                            if newState == "" {
-                                showSelfHostedView = true
+                        .padding()
+                        .onChange(of: selectedServerType) { oldValue, newValue in
+                            if newValue == .selfHosted {
+                                isShowingCustomURLSheet = true
+                            } else {
+                                isShowingCustomURLSheet = false
                             }
-                        }
+                        }   
                     }
                 }
                 .padding(.horizontal)
@@ -116,9 +121,9 @@ struct LoginView: View {
                 return Alert(title: Text("Invalid Login"), message: Text(error.localizedDescription))
             }
         }
-        .sheet(isPresented: $showSelfHostedView) {
+        .sheet(isPresented: $isShowingCustomURLSheet) {
             NavigationStack {
-                ServerURLView(serverURL: $server, isPresented: $showSelfHostedView)
+                ServerURLView(serverURL: $customServerURL, isPresented: $isShowingCustomURLSheet)
             }
         }
     }

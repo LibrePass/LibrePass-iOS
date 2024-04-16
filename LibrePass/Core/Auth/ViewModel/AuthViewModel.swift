@@ -18,6 +18,7 @@ protocol AuthenticationFormProtocol {
 
 class AuthViewModel: ObservableObject {
     @Published var isLoggedIn = false
+    @Published var isValidated = false
     @Published var error: AuthenticationError?
     
     let endpoint = "/api/auth"
@@ -296,6 +297,10 @@ class AuthViewModel: ObservableObject {
                 return NSLocalizedString("You credentials have not been saved. Do you want to save them after the next successful login?", comment: "")
             }
         }
+    }
+    
+    func updateValidation(success: Bool) {
+        isValidated = success
     }
 }
 
