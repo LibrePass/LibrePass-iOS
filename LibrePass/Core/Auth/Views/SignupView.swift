@@ -23,13 +23,12 @@ struct SignupView: View {
     
     var body: some View {
         VStack {
-            Image(uiImage: UIImage(named: AppIconProvider.appIcon())!)
+            Image("Icon")
                 .resizable()
-                .frame(width: 128, height: 128)
+                .frame(width: 170, height: 170)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
+                .padding()
             
-            Text("LibrePass")
-                .font(.title)
             
             VStack(spacing: 24) {
                 InputView(text: $email, title: "Email Address", placeholder: "name@example.com")
@@ -100,6 +99,8 @@ struct SignupView: View {
             .opacity(formIsValid ? 1.0 : 0.5 )
             .cornerRadius(10)
             .padding(.top, 24)
+            
+            Spacer()
             
             Button {
                 dismiss()

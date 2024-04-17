@@ -19,13 +19,12 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Image(uiImage: UIImage(named: AppIconProvider.appIcon())!)
+                Image("Icon")
                     .resizable()
-                    .frame(width: 128, height: 128)
+                    .frame(width: 170, height: 170)
                     .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .padding()
                 
-                Text("LibrePass")
-                    .font(.title)
                 
                 VStack(spacing: 24) {
                     InputView(text: $email, title: "Email Address", placeholder: "name@example.com")
@@ -96,6 +95,7 @@ struct LoginView: View {
                 }
             }
             
+            Spacer()
             
             NavigationLink {
                 SignupView()
@@ -135,18 +135,6 @@ extension LoginView: AuthenticationFormProtocol {
         && email.contains("@")
         && !password.isEmpty
         && password.count > 7
-    }
-}
-
-enum AppIconProvider {
-    static func appIcon(in bundle: Bundle = .main) -> String {
-        guard let icons = bundle.object(forInfoDictionaryKey: "CFBundleIcons") as? [String: Any],
-              let primaryIcon = icons["CFBundlePrimaryIcon"] as? [String: Any],
-              let iconFiles = primaryIcon["CFBundleIconFiles"] as? [String],
-              let iconFileName = iconFiles.last else {
-            fatalError("Could not find icons in bundle")
-        }
-        return iconFileName
     }
 }
 
