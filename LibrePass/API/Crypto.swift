@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SignalArgon2
+import Argon2Swift
 import CryptoKit
 
 struct Argon2IdOptions: Codable {
@@ -17,9 +17,12 @@ struct Argon2IdOptions: Codable {
 }
 
 func argon2Hash(email: String, password: String, hashOptions: Argon2IdOptions) throws -> Data {
-    let (rawHash, _) = try Argon2.hash(iterations: UInt32(hashOptions.iterations), memoryInKiB: UInt32(hashOptions.memory), threads: UInt32(hashOptions.parallelism), password: password.data(using: .utf8)!, salt: email.data(using: .utf8)!, desiredLength: 32, variant: .id, version: .v13)
+    guard let salt = email.data(using: .utf8) else {
+        throw LibrePassApiErrors.WithMessage(message: "Invalid salt")
+    }
     
-    return rawHash
+    return try Argon2Swift.hashPasswordString(password: password, salt: Salt.init(bytes: salt), iterations: hashOptions.iterations, memory: hashOptions.memory, parallelism: hashOptions.parallelism, type: .id)
+        .hashData()
 }
 
 func dataToHexString(data: Data) -> String {

@@ -8,7 +8,7 @@ $(DESTDIR)/LibrePass.ipa: $(DESTDIR)/LibrePass.app
 		zip -r LibrePass.ipa Payload
 
 $(DESTDIR)/LibrePass.app:
-	    xcodebuild -workspace LibrePass.xcworkspace -scheme LibrePass -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO SYMROOT=$(PWD)/Build
+	    xcodebuild -project LibrePass.xcodeproj -scheme LibrePass -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO SYMROOT=$(PWD)/Build
 
 clean:
 	rm -rf Build

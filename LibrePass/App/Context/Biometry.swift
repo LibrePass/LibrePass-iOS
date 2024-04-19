@@ -10,6 +10,7 @@ import LocalAuthentication
 
 func setUpBiometricalAuthentication(password: String) async -> Bool {
     let context = LAContext()
+    context.localizedCancelTitle = "Use password"
     
     if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: nil) {
         do {
@@ -45,6 +46,7 @@ func setUpBiometricalAuthentication(password: String) async -> Bool {
 
 func accessKeychain() async -> String? {
     let context = LAContext()
+    context.localizedCancelTitle = "Use password"
     
     if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: nil) {
         do {

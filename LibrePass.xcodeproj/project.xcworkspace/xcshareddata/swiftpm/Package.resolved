@@ -1,0 +1,51 @@
+{
+  "originHash" : "d23d88b75a89b4ad97e676c3e1b9dfdc60be047662bb411fea0623e4978555cd",
+  "pins" : [
+    {
+      "identity" : "argon2swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tmthecoder/Argon2Swift.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "53543623fefe68461b7eeea03d7f96677c2fd76d"
+      }
+    },
+    {
+      "identity" : "codescanner",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/twostraws/CodeScanner",
+      "state" : {
+        "revision" : "944a6a1ca030dbd890e647a678e718fc2115d35c",
+        "version" : "2.4.1"
+      }
+    },
+    {
+      "identity" : "phc-winner-argon2",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/P-H-C/phc-winner-argon2.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "f57e61e19229e23c4445b85494dbf7c07de721cb"
+      }
+    },
+    {
+      "identity" : "swift-crypto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-crypto.git",
+      "state" : {
+        "revision" : "f0525da24dc3c6cbb2b6b338b65042bc91cbc4bb",
+        "version" : "3.3.0"
+      }
+    },
+    {
+      "identity" : "swiftotp",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lachlanbell/SwiftOTP.git",
+      "state" : {
+        "revision" : "9660551ea3df153c3cbacfa34ac3abbec73a8b84",
+        "version" : "3.0.2"
+      }
+    }
+  ],
+  "version" : 3
+}

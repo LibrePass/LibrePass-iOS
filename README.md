@@ -9,6 +9,8 @@ If app crashes after update, you probably need to clear vault unfortunately.
 
 ### Used libraries:
 - SwiftUI
+- SwiftData
 - Apple CryptoKit
-- SignalArgon2
+- Argon2Swift
 - SwiftOTP
+- CodeScanner

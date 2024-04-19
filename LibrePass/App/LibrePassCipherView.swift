@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftOTP
 import SwiftData
+import CodeScanner
 
 struct CipherView: View {
     @EnvironmentObject var context: LibrePassContext
@@ -66,6 +67,7 @@ struct CipherLoginDataView: View {
     @State var oneTimePassword = ""
     @State var timeLeft = 0
     @State var editTwoFactor = false
+    @State var twoFactorScanQR = true
     
     var body: some View {
         List {
@@ -165,60 +167,80 @@ struct CipherLoginDataView: View {
         .sheet(isPresented: self.$editTwoFactor, onDismiss: {
             runAuthenticatorJob()
         }) {
-            List {
-                Section(header: Text("Manual configuration")) {
-                    TextField("Secret", text: self.$twoFactorSecret)
-                    Picker("Type", selection: self.$twoFactorType) {
-                        Text("TOTP").tag(OATHParams.OATHType.TOTP)
-                    }
-                    TextField("Digits", value: self.$twoFactorDigits, formatter: NumberFormatter())
-                    if self.twoFactorType == .TOTP {
-                        TextField("Period", value: self.$twoFactorPeriod, formatter: NumberFormatter())
-                    } else {
-                        TextField("Counter", value: self.$twoFactorCounter, formatter: NumberFormatter())
-                    }
-                    
-                    Button("Apply") {
-                        let split = self.twoFactorSecret.components(separatedBy: " ")
-                        if split.count > 0 {
-                            self.twoFactorSecret = ""
-                            split.forEach {
-                                if $0 != "" {
-                                    self.twoFactorSecret += $0
-                                }
-                            }
-                        }
-                        
-                        var str = "otpauth://" + self.twoFactorType.toString()
-                        str += "/randomlabel?secret=" + self.twoFactorSecret
-                        str += "&algorithm=" + self.twoFactorAlgorithm.toString()
-                        str += "&digits=" + String(self.twoFactorDigits)
-                        
-                        if self.twoFactorType == .TOTP {
-                            str += "&period=" + String(self.twoFactorPeriod)
+            if self.twoFactorScanQR {
+                CodeScannerView(codeTypes: [.qr]) { response in
+                    switch response {
+                    case .success(let result):
+                        self.twoFactorUri = result.string
+                        if (try? self.parseTwoFactor()) == nil {
+                            self.twoFactorError = true
                         } else {
-                            str += "&counter=" + String(self.twoFactorCounter)
+                            self.twoFactorScanQR = false
                         }
-                        
-                        self.twoFactorUri = str
-                        
-                        self.editTwoFactor = false
+                        break
+                    case .failure:
+                        break
                     }
                 }
-            }
-            .onAppear {
-                do {
-                    if let twoFactorUri = self.twoFactorUri {
-                        let params = try OATHParams(uri: twoFactorUri)
-                        self.twoFactorType = params.type
-                        self.twoFactorAlgorithm = params.algorithm
-                        self.twoFactorSecret = base32Encode(params.secret)
-                        self.twoFactorDigits = params.digits
-                        self.twoFactorPeriod = params.period
-                        self.twoFactorCounter = params.counter
+                .padding()
+                
+                List {
+                    Section() {
+                        Button("Set up manually") { self.twoFactorScanQR = false }
                     }
-                } catch {
-                    self.twoFactorError = true
+                }
+            } else {
+                List {
+                    Section(header: Text("Manual configuration")) {
+                        TextField("Secret", text: self.$twoFactorSecret)
+                        Picker("Type", selection: self.$twoFactorType) {
+                            Text("TOTP").tag(OATHParams.OATHType.TOTP)
+                        }
+                        TextField("Digits", value: self.$twoFactorDigits, formatter: NumberFormatter())
+                        if self.twoFactorType == .TOTP {
+                            TextField("Period", value: self.$twoFactorPeriod, formatter: NumberFormatter())
+                        } else {
+                            TextField("Counter", value: self.$twoFactorCounter, formatter: NumberFormatter())
+                        }
+                        
+                        Button("Apply") {
+                            let split = self.twoFactorSecret.components(separatedBy: " ")
+                            if split.count > 0 {
+                                self.twoFactorSecret = ""
+                                split.forEach {
+                                    if $0 != "" {
+                                        self.twoFactorSecret += $0
+                                    }
+                                }
+                            }
+                            
+                            var str = "otpauth://" + self.twoFactorType.toString()
+                            str += "/randomlabel?secret=" + self.twoFactorSecret
+                            str += "&algorithm=" + self.twoFactorAlgorithm.toString()
+                            str += "&digits=" + String(self.twoFactorDigits)
+                            
+                            if self.twoFactorType == .TOTP {
+                                str += "&period=" + String(self.twoFactorPeriod)
+                            } else {
+                                str += "&counter=" + String(self.twoFactorCounter)
+                            }
+                            
+                            self.twoFactorUri = str
+                            
+                            self.editTwoFactor = false
+                        }
+                    }
+                    
+                    Section() {
+                        Button("Scan QR code") { self.twoFactorScanQR = true }
+                    }
+                }
+                .onAppear {
+                    do {
+                        try self.parseTwoFactor()
+                    } catch {
+                        self.twoFactorError = true
+                    }
                 }
             }
         }
@@ -231,6 +253,18 @@ struct CipherLoginDataView: View {
     @State var twoFactorPeriod = 30
     @State var twoFactorCounter = 0
     @State var twoFactorError = false
+    
+    func parseTwoFactor() throws {
+        if let twoFactorUri = self.twoFactorUri {
+            let params = try OATHParams(uri: twoFactorUri)
+            self.twoFactorType = params.type
+            self.twoFactorAlgorithm = params.algorithm
+            self.twoFactorSecret = base32Encode(params.secret)
+            self.twoFactorDigits = params.digits
+            self.twoFactorPeriod = params.period
+            self.twoFactorCounter = params.counter
+        }
+    }
     
     func runAuthenticatorJob() {
         Task {

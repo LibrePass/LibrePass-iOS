@@ -68,8 +68,10 @@ struct OATHParams {
         
         if uri.starts(with: "otpauth://totp/") {
             self.type = .TOTP
-        } else {
+        } else if uri.starts(with: "otpauth://hotp/") {
             self.type = .HOTP
+        } else {
+            throw LibrePassApiErrors.WithMessage(message: "Invalid 2FA URI")
         }
         
         let uriSplit = uri.components(separatedBy: "?")[1].components(separatedBy: "&")
