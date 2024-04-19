@@ -13,6 +13,7 @@ class LibrePassContext: ObservableObject {
     @Published var lClient: LibrePassClient?
     @Published var loggedIn: Bool
     @Published var locallyLoggedIn: Bool
+    @Published var wasLogged: Bool = false
     @Published var credentialsDatabase: LibrePassCredentialsDatabase?
     
     init(lClient: LibrePassClient? = nil) {

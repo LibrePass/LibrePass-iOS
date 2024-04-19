@@ -44,6 +44,7 @@ extension [EncryptedCipherStorageItem] {
 @Model
 class CredentialsDatabaseStorageItem {
     var credentialsDatabase: LibrePassCredentialsDatabase
+    var biometric: Bool?
     
     init(credentialsDatabase: LibrePassCredentialsDatabase) {
         self.credentialsDatabase = credentialsDatabase

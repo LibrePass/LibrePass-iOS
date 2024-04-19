@@ -28,7 +28,21 @@ struct LibrePassLocalLogin: View {
             Section(header: Text("Login")) {
                 SecureField("Password", text: $password)
                     .autocapitalization(.none)
-                ButtonWithSpinningWheel(text: "Unlock vault", task: { try self.context.localLogIn(password: self.password, credentialsDatabase: credentials[0].credentialsDatabase) })
+                ButtonWithSpinningWheel(text: "Unlock vault", task: self.logIn)
+            }
+            
+            if self.credentials.count > 0 && self.credentials[0].biometric ?? false {
+                Section(header: Text("Biometry")) {
+                    Button("Face ID/Touch ID") {
+                        self.biometricalLogin()
+                    }
+                }
+            }
+        }
+        
+        .onAppear {
+            if self.credentials[0].biometric ?? false && !self.context.wasLogged {
+                self.biometricalLogin()
             }
         }
         
@@ -46,6 +60,19 @@ struct LibrePassLocalLogin: View {
                     
                 }
             }
+        }
+    }
+    
+    func logIn() throws {
+        try self.context.localLogIn(password: self.password, credentialsDatabase: credentials[0].credentialsDatabase)
+        self.context.wasLogged = true
+    }
+    
+    func biometricalLogin() {
+        Task {
+            guard let password = await accessKeychain() else { return }
+            self.password = password
+            try? self.logIn()
         }
     }
 }

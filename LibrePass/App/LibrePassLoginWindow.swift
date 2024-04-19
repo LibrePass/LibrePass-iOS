@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LibrePassLoginWindow: View {
     @EnvironmentObject var context: LibrePassContext
+    
     @Environment(\.modelContext) var modelContext
+    @Query var credentialsDatabaseStorage: [CredentialsDatabaseStorageItem]
     
     @State private var email = String()
     @State private var password = String()
@@ -27,6 +30,14 @@ struct LibrePassLoginWindow: View {
             ButtonWithSpinningWheel(text: "Log in", task: {
                 modelContext.insert(try self.context.logIn(email: self.email, password: self.password, apiUrl: self.apiServer))
                 modelContext.insert(LastSyncStorage(lastSync: 0))
+                
+                Task {
+                    if await setUpBiometricalAuthentication(password: self.password) {
+                        self.credentialsDatabaseStorage[0].biometric = true
+                    }
+                }
+                
+                self.context.wasLogged = true
             })
         }
             

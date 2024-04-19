@@ -146,6 +146,16 @@ struct LibrePassClient {
         return nil
     }
     
+    func validatePassword(credentialsDatabase: LibrePassCredentialsDatabase, password: String) throws -> Bool {
+        let (_, oldPublicData, oldSharedData) = try self.getKeys(email: credentialsDatabase.email, password: password, argon2options: credentialsDatabase.argon2idParams)
+        
+        if dataToHexString(data: oldPublicData) != credentialsDatabase.publicKey {
+            return false
+        }
+        
+        return true
+    }
+    
     mutating func updateCredentials(credentialsDatabase: LibrePassCredentialsDatabase, oldPassword: String, newEmail: String, newPassword: String?, newPasswordHint: String?, vault: [LibrePassEncryptedCipher]) throws {
         struct CompactCipher: Codable {
             var id: String

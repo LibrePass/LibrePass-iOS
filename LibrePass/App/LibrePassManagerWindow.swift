@@ -15,7 +15,7 @@ struct LibrePassManagerWindow: View {
     @State private var showAlert = false
     @State private var new = false
     
-    @State var refreshIndicator: Bool = true
+    @State var refreshIndicator: Bool = false
     @State var deletionIndicator: Bool = false
     
     @State var toDelete: IndexSet = []
@@ -89,10 +89,9 @@ struct LibrePassManagerWindow: View {
                             }
                             
                             Button(action: {
-                                if let _ = try? modelContext.delete(model: EncryptedCipherStorageItem.self) {
-                                    self.lastStorageItem[0].lastSync = 0
-                                    self.refreshIndicator = true
-                                }
+                                try? modelContext.delete(model: EncryptedCipherStorageItem.self)
+                                self.lastStorageItem[0].lastSync = 0
+                                self.refreshIndicator = true
                             }) {
                                 Image(systemName: "arrow.clockwise")
                                 Text("Refetch ciphers")
@@ -129,6 +128,10 @@ struct LibrePassManagerWindow: View {
             
         .sheet(isPresented: self.$accountSettings) {
             LibrePassAccountSettings()
+        }
+        
+        .onAppear {
+            self.refreshIndicator = true
         }
     }
     

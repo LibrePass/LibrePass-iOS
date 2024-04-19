@@ -51,6 +51,22 @@ struct LibrePassAccountSettings: View {
             }
             
             Section {
+                if self.credentialsDatabaseStorage.count > 0 && self.credentialsDatabaseStorage[0].biometric ?? false {
+                    Button("Disable biometric authentication") {
+                        if let success = try? self.context.lClient!.validatePassword(credentialsDatabase: self.credentialsDatabaseStorage[0].credentialsDatabase, password: self.password), success {
+                            self.clearKeyChain()
+                        }
+                    }
+                } else {
+                    Button("Enable biometric authentication") {
+                        Task {
+                            if let success = try? self.context.lClient!.validatePassword(credentialsDatabase: self.credentialsDatabaseStorage[0].credentialsDatabase, password: self.password), success {
+                                self.credentialsDatabaseStorage[0].biometric = await setUpBiometricalAuthentication(password: self.password)
+                            }
+                        }
+                    }
+                }
+                
                 Button("Log out", role: .destructive) {
                     self.logOut()
                 }
@@ -69,17 +85,21 @@ struct LibrePassAccountSettings: View {
     }
     
     func logOut() {
-        do {
-            try modelContext.delete(model: CredentialsDatabaseStorageItem.self)
-            try modelContext.delete(model: EncryptedCipherStorageItem.self)
-            try modelContext.delete(model: SyncQueueItem.self)
-            try modelContext.delete(model: LastSyncStorage.self)
+        self.clearKeyChain()
             
-            self.context.loggedIn = false
-            self.context.locallyLoggedIn = false
-            self.context.lClient = nil
-        } catch {
-            
+        try? modelContext.delete(model: CredentialsDatabaseStorageItem.self)
+        try? modelContext.delete(model: EncryptedCipherStorageItem.self)
+        try? modelContext.delete(model: SyncQueueItem.self)
+        try? modelContext.delete(model: LastSyncStorage.self)
+        
+        self.context.loggedIn = false
+        self.context.locallyLoggedIn = false
+        self.context.lClient = nil
+    }
+    
+    func clearKeyChain() {
+        Task {
+            self.credentialsDatabaseStorage[0].biometric = !(await disableBiometricAuthentication())
         }
     }
     
