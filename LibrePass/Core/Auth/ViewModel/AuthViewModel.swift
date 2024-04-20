@@ -109,19 +109,17 @@ class AuthViewModel: ObservableObject {
             "Accept": "application/json"
         ]
         
-        return PreLoginResponse(parallelism: 1, memory: 1, iterations: 1, serverPublicKey: "asd")
-        
-//        return try await withCheckedThrowingContinuation { continuation in
-//            AF.request(CustomEnvironment.rootURL + endpoint + "/preLogin", method: .get, parameters: parameters, headers: headers)
-//                .responseDecodable(of: PreLoginResponse.self) { response in
-//                    switch response.result {
-//                    case let .success(data):
-//                        continuation.resume(returning: data)
-//                    case let .failure(error):
-//                        continuation.resume(throwing: error)
-//                    }
-//                }
-//        }
+        return try await withCheckedThrowingContinuation { continuation in
+            AF.request(CustomEnvironment.rootURL + endpoint + "/preLogin", method: .get, parameters: parameters, headers: headers)
+                .responseDecodable(of: PreLoginResponse.self) { response in
+                    switch response.result {
+                    case let .success(data):
+                        continuation.resume(returning: data)
+                    case let .failure(error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+        }
     }
     
     private func login(withEmail email: String, password: String) async throws {
