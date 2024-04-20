@@ -106,6 +106,7 @@ struct LoginView: View {
                         .fontWeight(.bold)
                 }
                 .font(.system(size: 16))
+                
             }
             .padding()
         }

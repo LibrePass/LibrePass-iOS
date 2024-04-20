@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		17349C0D2BC1E19D00452814 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17349C0C2BC1E19D00452814 /* ContentView.swift */; };
-		17349C0F2BC1E4A100452814 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17349C0E2BC1E4A100452814 /* LoginView.swift */; };
 		17349C112BC1E4B300452814 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17349C102BC1E4B300452814 /* SignupView.swift */; };
 		174EA0982BC3609E00084D2C /* Argon2Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 174EA0972BC3609E00084D2C /* Argon2Swift */; };
 		175190532BCA3EEB0076460A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175190522BCA3EEB0076460A /* HomeView.swift */; };
@@ -17,6 +16,7 @@
 		177B62CE2BCB14DF003EBC65 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 177B62CD2BCB14DF003EBC65 /* AlamofireDynamic */; };
 		177B62D02BCB78B1003EBC65 /* PreLoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177B62CF2BCB78B1003EBC65 /* PreLoginResponse.swift */; };
 		179E981C2BC1DDBB00D71ACA /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179E981B2BC1DDBB00D71ACA /* AuthViewModel.swift */; };
+		17AABE232BD3913500B0AA8C /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17349C0E2BC1E4A100452814 /* LoginView.swift */; };
 		17B4516B2BCC6E1C00C5E1AE /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 17B4516A2BCC6E1C00C5E1AE /* KeychainSwift */; };
 		17B4516D2BCC832900C5E1AE /* UserCredentialResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B4516C2BCC832900C5E1AE /* UserCredentialResponse.swift */; };
 		17B4516F2BCC8CE600C5E1AE /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B4516E2BCC8CE600C5E1AE /* LoginRequest.swift */; };
@@ -272,10 +272,10 @@
 				17B4516F2BCC8CE600C5E1AE /* LoginRequest.swift in Sources */,
 				17B451742BCDB90B00C5E1AE /* Credentials.swift in Sources */,
 				177B62D02BCB78B1003EBC65 /* PreLoginResponse.swift in Sources */,
-				17349C0F2BC1E4A100452814 /* LoginView.swift in Sources */,
 				17B4516D2BCC832900C5E1AE /* UserCredentialResponse.swift in Sources */,
 				B253F1DD2B83942B00D048F9 /* LibrePassApp.swift in Sources */,
 				17349C0D2BC1E19D00452814 /* ContentView.swift in Sources */,
+				17AABE232BD3913500B0AA8C /* LoginView.swift in Sources */,
 				17B451722BCD866900C5E1AE /* RegisterRequest.swift in Sources */,
 				176A30622BC1C103005C143E /* CustomEnvironment.swift in Sources */,
 				179E981C2BC1DDBB00D71ACA /* AuthViewModel.swift in Sources */,
@@ -342,6 +342,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -442,6 +443,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -546,6 +548,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -604,6 +607,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
