@@ -1,15 +1,6 @@
 {
-  "originHash" : "d79071d8e42f5f73fb37c202e359f0f236e869e1a14ab406e5a15af3a5306cfb",
+  "originHash" : "947f1689b14ee5d6f4b0a0c371d0c2a7adac287c68881080b01d6c4647e460e1",
   "pins" : [
-    {
-      "identity" : "alamofire",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Alamofire/Alamofire",
-      "state" : {
-        "revision" : "f455c2975872ccd2d9c81594c658af65716e9b9a",
-        "version" : "5.9.1"
-      }
-    },
     {
       "identity" : "argon2swift",
       "kind" : "remoteSourceControl",

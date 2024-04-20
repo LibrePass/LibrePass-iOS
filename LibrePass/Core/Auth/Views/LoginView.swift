@@ -13,7 +13,7 @@ struct LoginView: View {
     @State private var customServerURL = ""
     @State private var isShowingCustomURLSheet = false
     @State private var selectedServerType: ServerType = .official
-
+    
     @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
@@ -28,7 +28,9 @@ struct LoginView: View {
                 
                 VStack(spacing: 24) {
                     InputView(text: $email, title: "Email Address", placeholder: "name@example.com")
+#if os(iOS)
                         .autocapitalization(.none)
+#endif
                     
                     InputView(text: $password, title: "Password", placeholder: "Enter your password", isSecureField: true)
                     
@@ -49,7 +51,7 @@ struct LoginView: View {
                             } else {
                                 isShowingCustomURLSheet = false
                             }
-                        }   
+                        }
                     }
                 }
                 .padding(.horizontal)
@@ -67,7 +69,7 @@ struct LoginView: View {
                     Image(systemName: "arrow.right")
                 }
                 .foregroundColor(.white)
-                .frame(width: UIScreen.main.bounds.width - 32, height: 48)
+                .frame(width: screenWidth() - 32, height: 48)
             }
             .background(Color(.systemBlue))
             .disabled(!formIsValid)
@@ -126,6 +128,14 @@ struct LoginView: View {
                 ServerURLView(serverURL: $customServerURL, isPresented: $isShowingCustomURLSheet)
             }
         }
+    }
+    
+    private func screenWidth() -> CGFloat {
+#if os(iOS)
+        return UIScreen.main.bounds.width
+#elseif os(macOS)
+        return NSScreen.main?.visibleFrame.width ?? 0
+#endif
     }
 }
 

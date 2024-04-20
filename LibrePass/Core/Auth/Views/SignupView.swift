@@ -32,7 +32,9 @@ struct SignupView: View {
             
             VStack(spacing: 24) {
                 InputView(text: $email, title: "Email Address", placeholder: "name@example.com")
+#if os(iOS)
                     .autocapitalization(.none)
+#endif
                 
                 InputView(text: $password, title: "Password", placeholder: "Enter your password", isSecureField: true)
                 
@@ -92,7 +94,7 @@ struct SignupView: View {
                     Image(systemName: "arrow.right")
                 }
                 .foregroundColor(.white)
-                .frame(width: UIScreen.main.bounds.width - 32, height: 48)
+                .frame(width: screenWidth() - 32, height: 48)
             }
             .background(Color(.systemBlue))
             .disabled(!formIsValid)
@@ -122,6 +124,14 @@ struct SignupView: View {
                 ServerURLView(serverURL: $customServerURL, isPresented: $isShowingCustomURLSheet)
             }
         }
+    }
+    
+    private func screenWidth() -> CGFloat {
+#if os(iOS)
+        return UIScreen.main.bounds.width
+#elseif os(macOS)
+        return NSScreen.main?.visibleFrame.width ?? 0
+#endif
     }
 }
 
@@ -172,16 +182,37 @@ struct ServerURLView: View {
                 List {
                     TextField("Enter Server URL", text: $serverURL)
                 }
-                .background(Color(.systemGray6))
+                .background(Color.systemGray6)
             }
             .navigationTitle("Self-Hosted")
-            .navigationBarItems(trailing: Button("Done") {
-                UserDefaults.standard.set(serverURL, forKey: "SelfHostedURL")
-                isPresented = false
-            })
+#if os(iOS)
+            .navigationBarItems(trailing: doneButton)
+#endif
         }
-        .background(Color(.systemGray6).ignoresSafeArea())
+        .background(Color.systemGray6.ignoresSafeArea())
     }
+    
+#if os(iOS)
+    private var doneButton: some View {
+        Button("Done") {
+            UserDefaults.standard.set(serverURL, forKey: "SelfHostedURL")
+            isPresented = false
+        }
+    }
+#endif
+}
+
+
+extension Color {
+#if os(iOS)
+    static var systemGray6: Color {
+        return Color(UIColor.systemGray6)
+    }
+#elseif os(macOS)
+    static var systemGray6: Color {
+        return Color(NSColor(calibratedWhite: 0.6, alpha: 1.0))
+    }
+#endif
 }
 
 enum ServerType {

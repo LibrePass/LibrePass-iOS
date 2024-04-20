@@ -13,8 +13,6 @@
 		174EA0982BC3609E00084D2C /* Argon2Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 174EA0972BC3609E00084D2C /* Argon2Swift */; };
 		175190532BCA3EEB0076460A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175190522BCA3EEB0076460A /* HomeView.swift */; };
 		176A30622BC1C103005C143E /* CustomEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176A30612BC1C103005C143E /* CustomEnvironment.swift */; };
-		177B62CC2BCB14DF003EBC65 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 177B62CB2BCB14DF003EBC65 /* Alamofire */; };
-		177B62CE2BCB14DF003EBC65 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 177B62CD2BCB14DF003EBC65 /* AlamofireDynamic */; };
 		177B62D02BCB78B1003EBC65 /* PreLoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177B62CF2BCB78B1003EBC65 /* PreLoginResponse.swift */; };
 		179E981C2BC1DDBB00D71ACA /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179E981B2BC1DDBB00D71ACA /* AuthViewModel.swift */; };
 		17B4516B2BCC6E1C00C5E1AE /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 17B4516A2BCC6E1C00C5E1AE /* KeychainSwift */; };
@@ -56,9 +54,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				174EA0982BC3609E00084D2C /* Argon2Swift in Frameworks */,
-				177B62CE2BCB14DF003EBC65 /* AlamofireDynamic in Frameworks */,
 				17B4516B2BCC6E1C00C5E1AE /* KeychainSwift in Frameworks */,
-				177B62CC2BCB14DF003EBC65 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,8 +200,6 @@
 			name = LibrePass;
 			packageProductDependencies = (
 				174EA0972BC3609E00084D2C /* Argon2Swift */,
-				177B62CB2BCB14DF003EBC65 /* Alamofire */,
-				177B62CD2BCB14DF003EBC65 /* AlamofireDynamic */,
 				17B4516A2BCC6E1C00C5E1AE /* KeychainSwift */,
 			);
 			productName = LibrePass;
@@ -239,7 +233,6 @@
 			mainGroup = B2D91A0C2B8393C60004561A;
 			packageReferences = (
 				174EA0962BC3609E00084D2C /* XCRemoteSwiftPackageReference "Argon2Swift" */,
-				177B62CA2BCB14DF003EBC65 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				17B451692BCC6E1C00C5E1AE /* XCRemoteSwiftPackageReference "keychain-swift" */,
 			);
 			productRefGroup = B2D91A162B8393C60004561A /* Products */;
@@ -731,14 +724,6 @@
 				kind = branch;
 			};
 		};
-		177B62CA2BCB14DF003EBC65 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.9.1;
-			};
-		};
 		17B451692BCC6E1C00C5E1AE /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
@@ -754,16 +739,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 174EA0962BC3609E00084D2C /* XCRemoteSwiftPackageReference "Argon2Swift" */;
 			productName = Argon2Swift;
-		};
-		177B62CB2BCB14DF003EBC65 /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 177B62CA2BCB14DF003EBC65 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		177B62CD2BCB14DF003EBC65 /* AlamofireDynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 177B62CA2BCB14DF003EBC65 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = AlamofireDynamic;
 		};
 		17B4516A2BCC6E1C00C5E1AE /* KeychainSwift */ = {
 			isa = XCSwiftPackageProductDependency;
