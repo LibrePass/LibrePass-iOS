@@ -35,13 +35,13 @@ class LibrePassContext: ObservableObject {
     }
     
     func logIn(email: String, password: String, apiUrl: String) throws -> CredentialsDatabaseStorageItem {
-        self.lClient = LibrePassClient(apiUrl: apiUrl)
-        let credets = CredentialsDatabaseStorageItem(credentialsDatabase: try self.lClient!.login(email: email, password: password))
-        self.credentialsDatabase = credets.credentialsDatabase
+        let (credets, lClient) = try LibrePassClient.login(email: email, password: password, apiUrl: apiUrl)
+        self.credentialsDatabase = credets
+        self.lClient = lClient
         self.locallyLoggedIn = true
         self.loggedIn = true
         
-        return credets
+        return CredentialsDatabaseStorageItem(credentialsDatabase: credets)
     }
     
     func unAuth() {

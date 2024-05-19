@@ -6,7 +6,8 @@
 //
 
 import Foundation
-import CryptoKit
+import Crypto
+import LibCrypto
 
 struct LibrePassEncryptedCipher: Codable {
     var id: String
@@ -27,13 +28,12 @@ struct LibrePassEncryptedCipher: Codable {
         self.type = cipher.type.rawValue
         switch cipher.type {
         case .Login:
-            self.protectedData = dataToHexString(data: try aesGcmEncrypt(data: JSONEncoder().encode(cipher.loginData!), key: key))
+            self.protectedData = try AesGcm.encrypt(String(decoding: JSONEncoder().encode(cipher.loginData!), as: UTF8.self), key: key)
             break
         case .SecureNote:
-            self.protectedData = dataToHexString(data: try aesGcmEncrypt(data: JSONEncoder().encode(cipher.secureNoteData!), key: key))
-            break
+            self.protectedData = try AesGcm.encrypt(String(decoding: JSONEncoder().encode(cipher.secureNoteData!), as: UTF8.self), key: key)
         case .Card:
-            self.protectedData = dataToHexString(data: try aesGcmEncrypt(data: JSONEncoder().encode(cipher.cardData!), key: key))
+            self.protectedData = try AesGcm.encrypt(String(decoding: JSONEncoder().encode(cipher.cardData!), as: UTF8.self), key: key)
             break
         }
         

@@ -61,7 +61,16 @@ class ApiClient {
     }
 }
 
-enum ApiClientErrors: Error {
+enum ApiClientErrors: Error, LocalizedError {
     case StatusCodeNot200(statusCode: Int, body: ApiClient.ApiErrorData)
     case UnknownResponse
+    
+    public var errorDescription: String? {
+        switch self {
+        case .StatusCodeNot200(let statusCode, let body):
+            return String(statusCode) + ": " + body.error
+        case .UnknownResponse:
+            return "Unknown error"
+        }
+    }
 }

@@ -91,7 +91,7 @@ struct LibrePassManagerWindow: View {
                             Button(action: {
                                 try? modelContext.delete(model: EncryptedCipherStorageItem.self)
                                 self.lastStorageItem[0].lastSync = 0
-                                self.refreshIndicator = true
+                                Task { self.refreshIndicator = true }
                             }) {
                                 Image(systemName: "arrow.clockwise")
                                 Text("Refetch ciphers")
@@ -131,13 +131,18 @@ struct LibrePassManagerWindow: View {
         }
         
         .onAppear {
-            self.refreshIndicator = true
+            Task { self.refreshIndicator = true }
         }
     }
     
     func deleteCiphers() throws {
         for index in self.toDelete {
-            modelContext.insert(SyncQueueItem(operation: .Delete(id: self.encryptedVault[index].encryptedCipher.id), id: self.encryptedVault[index].encryptedCipher.id))
+            modelContext.insert(SyncQueueItem(
+                operation: .Delete(
+                    id: self.encryptedVault[index].encryptedCipher.id
+                ),
+                id: self.encryptedVault[index].encryptedCipher.id
+            ))
             modelContext.delete(self.encryptedVault[index])
         }
         
@@ -145,9 +150,19 @@ struct LibrePassManagerWindow: View {
     }
     
     func newCipher(_ type: LibrePassCipher.CipherType) throws {
-        let cipher = try LibrePassEncryptedCipher(cipher: LibrePassCipher(id: self.context.lClient!.generateId(vault: self.encryptedVault.toEncryptedVault()), owner: self.context.credentialsDatabase!.userId, type: type), key: self.context.lClient!.sharedKey!)
+        let cipher = try LibrePassEncryptedCipher(
+            cipher: LibrePassCipher(
+                id: self.encryptedVault.generateId(),
+                owner: self.context.credentialsDatabase!.userId,
+                type: type
+            ),
+            key: self.context.lClient!.keys.sharedKey
+        )
         
-        modelContext.insert(SyncQueueItem(operation: .Push(cipher: cipher), id: cipher.id))
+        modelContext.insert(SyncQueueItem(
+            operation: .Push(cipher: cipher),
+            id: cipher.id)
+        )
         modelContext.insert(EncryptedCipherStorageItem(encryptedCipher: cipher))
         
         self.refreshIndicator = true
@@ -155,10 +170,15 @@ struct LibrePassManagerWindow: View {
     
     func syncVault() throws {
         if networkMonitor.isConnected {
-            if let synced = try self.context.sync(syncQueue: self.syncQueue, vault: self.encryptedVault, lastSync: self.lastStorageItem[0].lastSync) {
+            if let synced = try self.context.sync(
+                syncQueue: self.syncQueue,
+                vault: self.encryptedVault,
+                lastSync: self.lastStorageItem[0].lastSync
+            ) {
                 for updatedCipher in synced.ciphers {
                     if let index = self.encryptedVault.firstIndex(where: { updatedCipher.id == $0.encryptedCipher.id }) {
-                        if let last1 = self.encryptedVault[index].encryptedCipher.lastModified, let last2 = updatedCipher.lastModified, last1 > last2 {
+                        if let last1 = self.encryptedVault[index].encryptedCipher.lastModified,
+                           let last2 = updatedCipher.lastModified, last1 > last2 {
                             continue
                         }
                         
@@ -184,7 +204,10 @@ struct LibrePassManagerWindow: View {
         
         self.vault = []
         for cipher in self.encryptedVault {
-            self.vault.append(try LibrePassCipher(encCipher: cipher.encryptedCipher, key: self.context.lClient!.sharedKey!))
+            self.vault.append(try LibrePassCipher(
+                encCipher: cipher.encryptedCipher,
+                key: self.context.lClient!.keys.sharedKey
+            ))
         }
     }
 }

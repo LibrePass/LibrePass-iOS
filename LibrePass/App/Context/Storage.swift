@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
-import CryptoKit
+import Crypto
 
 @Model
 class EncryptedCipherStorageItem {
@@ -38,6 +38,15 @@ extension [EncryptedCipherStorageItem] {
         }
         
         return ret
+    }
+    
+    func generateId() -> String {
+        var uuid = UUID().uuidString.lowercased()
+        while self.first(where: { cipher in cipher.encryptedCipher.id == uuid }) != nil {
+            uuid = UUID().uuidString.lowercased()
+        }
+        
+        return uuid
     }
 }
 

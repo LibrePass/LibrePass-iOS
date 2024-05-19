@@ -9,7 +9,7 @@ import Foundation
 
 func generatePassword(length: Int) throws -> String {
     if length < 8 {
-        throw LibrePassApiErrors.WithMessage(message: "Password length must be longer or equal to 8")
+        throw LibrePassApiError.other("Password length must be longer or equal to 8")
     }
     
     let nOfNumbers = length / 4

@@ -71,7 +71,7 @@ struct OATHParams {
         } else if uri.starts(with: "otpauth://hotp/") {
             self.type = .HOTP
         } else {
-            throw LibrePassApiErrors.WithMessage(message: "Invalid 2FA URI")
+            throw LibrePassApiError.other("Invalid 2FA URI")
         }
         
         let uriSplit = uri.components(separatedBy: "?")[1].components(separatedBy: "&")
@@ -83,7 +83,7 @@ struct OATHParams {
             switch key {
             case "secret":
                 guard let secret = base32Decode(val) else {
-                    throw LibrePassApiErrors.WithMessage(message: "Bad 2FA secret")
+                    throw LibrePassApiError.other("Bad 2FA secret")
                 }
                 self.secret = Data(secret)
                 break

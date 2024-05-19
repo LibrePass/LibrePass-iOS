@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-import CryptoKit
+import Crypto
 
 struct LibrePassAccountSettings: View {
     @EnvironmentObject var context: LibrePassContext
@@ -53,14 +53,14 @@ struct LibrePassAccountSettings: View {
             Section {
                 if self.credentialsDatabaseStorage.count > 0 && self.credentialsDatabaseStorage[0].biometric ?? false {
                     Button("Disable biometric authentication") {
-                        if let success = try? self.context.lClient!.validatePassword(credentialsDatabase: self.credentialsDatabaseStorage[0].credentialsDatabase, password: self.password), success {
-                            self.clearKeyChain()
+                        if self.context.lClient!.validatePassword(email: self.credentialsDatabaseStorage[0].credentialsDatabase.email, password: self.password) {
+                            Task { await self.clearKeyChain() }
                         }
                     }
                 } else {
                     Button("Enable biometric authentication") {
                         Task {
-                            if let success = try? self.context.lClient!.validatePassword(credentialsDatabase: self.credentialsDatabaseStorage[0].credentialsDatabase, password: self.password), success {
+                            if self.context.lClient!.validatePassword(email: self.credentialsDatabaseStorage[0].credentialsDatabase.email, password: self.password) {
                                 self.credentialsDatabaseStorage[0].biometric = await setUpBiometricalAuthentication(password: self.password)
                             }
                         }
@@ -68,13 +68,13 @@ struct LibrePassAccountSettings: View {
                 }
                 
                 Button("Log out", role: .destructive) {
-                    self.logOut()
+                    Task { await self.logOut() }
                 }
             }
             
             .alert("Operation is finished. You'll be logged out. If you've changed email address, check your mailbox and verify email address",isPresented: self.$done) {
                 Button("OK") {
-                    self.logOut()
+                    Task { await self.logOut() }
                 }
             }
             
@@ -84,8 +84,8 @@ struct LibrePassAccountSettings: View {
         }
     }
     
-    func logOut() {
-        self.clearKeyChain()
+    func logOut() async {
+        await self.clearKeyChain()
             
         try? modelContext.delete(model: CredentialsDatabaseStorageItem.self)
         try? modelContext.delete(model: EncryptedCipherStorageItem.self)
@@ -97,15 +97,13 @@ struct LibrePassAccountSettings: View {
         self.context.lClient = nil
     }
     
-    func clearKeyChain() {
-        Task {
-            self.credentialsDatabaseStorage[0].biometric = !(await disableBiometricAuthentication())
-        }
+    func clearKeyChain() async {
+        self.credentialsDatabaseStorage[0].biometric = !(await disableBiometricAuthentication())
     }
     
     func updateCredentials() throws {
         if newPassword != "" && newPassword != newPasswordConfirm {
-            throw LibrePassApiErrors.WithMessage(message: "Passwords doesn't match")
+            throw LibrePassApiError.other("Passwords doesn't match")
         }
         
         try self.context.lClient!.updateCredentials(credentialsDatabase: self.credentialsDatabaseStorage[0].credentialsDatabase, oldPassword: password, newEmail: email, newPassword: (newPassword == "") ? nil : newPassword, newPasswordHint: newPasswordHint, vault: self.vault.toEncryptedVault())
@@ -115,7 +113,7 @@ struct LibrePassAccountSettings: View {
     
     func deleteAccount() {
         do {
-            try self.context.lClient!.deleteAccount(password: self.password, credentialsDatabase: self.credentialsDatabaseStorage[0].credentialsDatabase)
+            try self.context.lClient!.deleteAccount(credentialsDatabase: self.credentialsDatabaseStorage[0].credentialsDatabase, password: self.password)
             
             self.done = true
         } catch {

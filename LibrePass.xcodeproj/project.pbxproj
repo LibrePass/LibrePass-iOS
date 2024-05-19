@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B21EDBA02BF92941000F9C57 /* hsauth-swift in Frameworks */ = {isa = PBXBuildFile; productRef = B21EDB9F2BF92941000F9C57 /* hsauth-swift */; };
+		B21EDBA52BF930DE000F9C57 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21EDBA42BF930DE000F9C57 /* Keys.swift */; };
+		B21EDBA72BF93D53000F9C57 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21EDBA62BF93D53000F9C57 /* Errors.swift */; };
 		B26C2EF72BC6C988008CA547 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EE02BC6C988008CA547 /* Context.swift */; };
 		B26C2EF82BC6C988008CA547 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EE12BC6C988008CA547 /* NetworkMonitor.swift */; };
 		B26C2EF92BC6C988008CA547 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EE22BC6C988008CA547 /* Storage.swift */; };
@@ -20,7 +23,6 @@
 		B26C2F012BC6C988008CA547 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EEB2BC6C988008CA547 /* Utils.swift */; };
 		B26C2F022BC6C988008CA547 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EED2BC6C988008CA547 /* ApiClient.swift */; };
 		B26C2F032BC6C988008CA547 /* CredentialsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EEE2BC6C988008CA547 /* CredentialsDatabase.swift */; };
-		B26C2F042BC6C988008CA547 /* CredentialsUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EEF2BC6C988008CA547 /* CredentialsUpdate.swift */; };
 		B26C2F052BC6C988008CA547 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EF02BC6C988008CA547 /* Crypto.swift */; };
 		B26C2F062BC6C988008CA547 /* LibrePassAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EF12BC6C988008CA547 /* LibrePassAPI.swift */; };
 		B26C2F072BC6C988008CA547 /* LibrePassCipher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26C2EF22BC6C988008CA547 /* LibrePassCipher.swift */; };
@@ -30,12 +32,14 @@
 		B291B9D62BD274A1002901E3 /* Biometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B291B9D52BD274A1002901E3 /* Biometry.swift */; };
 		B29496522BC6C90200128B33 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B29496512BC6C90200128B33 /* Assets.xcassets */; };
 		B29496552BC6C90200128B33 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B29496542BC6C90200128B33 /* Preview Assets.xcassets */; };
-		B2A7E0962BD2D5600054891D /* Argon2Swift in Frameworks */ = {isa = PBXBuildFile; productRef = B2A7E0952BD2D5600054891D /* Argon2Swift */; };
+		B29DD10D2BFA593D00CFDD34 /* LibCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = B29DD10C2BFA593D00CFDD34 /* LibCrypto */; };
 		B2A7E0992BD2DC680054891D /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B2A7E0982BD2DC680054891D /* CodeScanner */; };
 		B2A7E0A22BD2E38D0054891D /* SwiftOTP in Frameworks */ = {isa = PBXBuildFile; productRef = B2A7E0A12BD2E38D0054891D /* SwiftOTP */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B21EDBA42BF930DE000F9C57 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
+		B21EDBA62BF93D53000F9C57 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		B26C2EE02BC6C988008CA547 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		B26C2EE12BC6C988008CA547 /* NetworkMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		B26C2EE22BC6C988008CA547 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
@@ -49,7 +53,6 @@
 		B26C2EEB2BC6C988008CA547 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		B26C2EED2BC6C988008CA547 /* ApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
 		B26C2EEE2BC6C988008CA547 /* CredentialsDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialsDatabase.swift; sourceTree = "<group>"; };
-		B26C2EEF2BC6C988008CA547 /* CredentialsUpdate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialsUpdate.swift; sourceTree = "<group>"; };
 		B26C2EF02BC6C988008CA547 /* Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
 		B26C2EF12BC6C988008CA547 /* LibrePassAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassAPI.swift; sourceTree = "<group>"; };
 		B26C2EF22BC6C988008CA547 /* LibrePassCipher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibrePassCipher.swift; sourceTree = "<group>"; };
@@ -69,8 +72,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2A7E0992BD2DC680054891D /* CodeScanner in Frameworks */,
+				B29DD10D2BFA593D00CFDD34 /* LibCrypto in Frameworks */,
 				B2A7E0A22BD2E38D0054891D /* SwiftOTP in Frameworks */,
-				B2A7E0962BD2D5600054891D /* Argon2Swift in Frameworks */,
+				B21EDBA02BF92941000F9C57 /* hsauth-swift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,13 +113,14 @@
 			children = (
 				B26C2EED2BC6C988008CA547 /* ApiClient.swift */,
 				B26C2EEE2BC6C988008CA547 /* CredentialsDatabase.swift */,
-				B26C2EEF2BC6C988008CA547 /* CredentialsUpdate.swift */,
 				B26C2EF02BC6C988008CA547 /* Crypto.swift */,
 				B26C2EF12BC6C988008CA547 /* LibrePassAPI.swift */,
 				B26C2EF22BC6C988008CA547 /* LibrePassCipher.swift */,
 				B26C2EF32BC6C988008CA547 /* LibrePassEncryptedCipher.swift */,
 				B26C2EF42BC6C988008CA547 /* OATH.swift */,
 				B26C2EF52BC6C988008CA547 /* PasswordGenerator.swift */,
+				B21EDBA42BF930DE000F9C57 /* Keys.swift */,
+				B21EDBA62BF93D53000F9C57 /* Errors.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -173,9 +178,10 @@
 			);
 			name = LibrePass;
 			packageProductDependencies = (
-				B2A7E0952BD2D5600054891D /* Argon2Swift */,
 				B2A7E0982BD2DC680054891D /* CodeScanner */,
 				B2A7E0A12BD2E38D0054891D /* SwiftOTP */,
+				B21EDB9F2BF92941000F9C57 /* hsauth-swift */,
+				B29DD10C2BFA593D00CFDD34 /* LibCrypto */,
 			);
 			productName = LibrePass;
 			productReference = B29496482BC6C90200128B33 /* LibrePass.app */;
@@ -206,9 +212,10 @@
 			);
 			mainGroup = B294963F2BC6C90200128B33;
 			packageReferences = (
-				B2A7E0942BD2D5600054891D /* XCRemoteSwiftPackageReference "Argon2Swift" */,
 				B2A7E0972BD2DC680054891D /* XCRemoteSwiftPackageReference "CodeScanner" */,
 				B2A7E0A02BD2E38D0054891D /* XCRemoteSwiftPackageReference "SwiftOTP" */,
+				B21EDB9E2BF92941000F9C57 /* XCRemoteSwiftPackageReference "hsauth-swift" */,
+				B29DD10B2BFA593D00CFDD34 /* XCRemoteSwiftPackageReference "swift-libcrypto" */,
 			);
 			productRefGroup = B29496492BC6C90200128B33 /* Products */;
 			projectDirPath = "";
@@ -239,8 +246,8 @@
 				B26C2F072BC6C988008CA547 /* LibrePassCipher.swift in Sources */,
 				B26C2EFA2BC6C988008CA547 /* LibrePassAccountSettings.swift in Sources */,
 				B291B9D62BD274A1002901E3 /* Biometry.swift in Sources */,
-				B26C2F042BC6C988008CA547 /* CredentialsUpdate.swift in Sources */,
 				B26C2EF72BC6C988008CA547 /* Context.swift in Sources */,
+				B21EDBA52BF930DE000F9C57 /* Keys.swift in Sources */,
 				B26C2F012BC6C988008CA547 /* Utils.swift in Sources */,
 				B26C2F062BC6C988008CA547 /* LibrePassAPI.swift in Sources */,
 				B26C2F092BC6C988008CA547 /* OATH.swift in Sources */,
@@ -254,6 +261,7 @@
 				B26C2F082BC6C988008CA547 /* LibrePassEncryptedCipher.swift in Sources */,
 				B26C2EF92BC6C988008CA547 /* Storage.swift in Sources */,
 				B26C2EFC2BC6C988008CA547 /* LibrePassCipherView.swift in Sources */,
+				B21EDBA72BF93D53000F9C57 /* Errors.swift in Sources */,
 				B26C2EFE2BC6C988008CA547 /* LibrePassLoginWindow.swift in Sources */,
 				B26C2EFF2BC6C988008CA547 /* LibrePassManagerWindow.swift in Sources */,
 				B26C2F022BC6C988008CA547 /* ApiClient.swift in Sources */,
@@ -407,12 +415,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.aeoliux.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -445,12 +453,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.aeoliux.LibrePass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -482,9 +490,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B2A7E0942BD2D5600054891D /* XCRemoteSwiftPackageReference "Argon2Swift" */ = {
+		B21EDB9E2BF92941000F9C57 /* XCRemoteSwiftPackageReference "hsauth-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/tmthecoder/Argon2Swift.git";
+			repositoryURL = "https://github.com/aeoliux/hsauth-swift";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		B29DD10B2BFA593D00CFDD34 /* XCRemoteSwiftPackageReference "swift-libcrypto" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/M3DZIK/swift-libcrypto";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -509,10 +525,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B2A7E0952BD2D5600054891D /* Argon2Swift */ = {
+		B21EDB9F2BF92941000F9C57 /* hsauth-swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2A7E0942BD2D5600054891D /* XCRemoteSwiftPackageReference "Argon2Swift" */;
-			productName = Argon2Swift;
+			package = B21EDB9E2BF92941000F9C57 /* XCRemoteSwiftPackageReference "hsauth-swift" */;
+			productName = "hsauth-swift";
+		};
+		B29DD10C2BFA593D00CFDD34 /* LibCrypto */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B29DD10B2BFA593D00CFDD34 /* XCRemoteSwiftPackageReference "swift-libcrypto" */;
+			productName = LibCrypto;
 		};
 		B2A7E0982BD2DC680054891D /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;

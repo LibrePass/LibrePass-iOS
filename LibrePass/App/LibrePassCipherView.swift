@@ -22,7 +22,7 @@ struct CipherView: View {
     func save(cipher: LibrePassCipher) {
         do {
             cipher.lastModified = Int64(Date().timeIntervalSince1970)
-            let encrypted = EncryptedCipherStorageItem(encryptedCipher: try LibrePassEncryptedCipher(cipher: cipher, key: self.context.lClient!.sharedKey!))
+            let encrypted = EncryptedCipherStorageItem(encryptedCipher: try LibrePassEncryptedCipher(cipher: cipher, key: self.context.lClient!.keys.sharedKey))
             
             modelContext.insert(SyncQueueItem(operation: .Push(cipher: encrypted.encryptedCipher), id: cipher.id))
             for (index, item) in self.vault.enumerated() {

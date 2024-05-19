@@ -6,7 +6,8 @@
 //
 
 import Foundation
-import CryptoKit
+import Crypto
+import LibCrypto
 import SwiftUI
 
 class LibrePassCipher: Codable {
@@ -47,7 +48,7 @@ class LibrePassCipher: Codable {
         self.id = encCipher.id
         self.owner = encCipher.owner
         guard let type = LibrePassCipher.CipherType(rawValue: encCipher.type) else {
-            throw LibrePassApiErrors.WithMessage(message: "Invalid cipher type")
+            throw LibrePassApiError.other("Invalid cipher type")
         }
         self.type = type
         self.collection = encCipher.collection
@@ -60,13 +61,13 @@ class LibrePassCipher: Codable {
         let decoder = JSONDecoder()
         switch self.type {
         case .Login:
-            self.loginData = try decoder.decode(CipherLoginData.self, from: aesGcmDecrypt(data: hexStringToData(string: encCipher.protectedData)!, key: key))
+            self.loginData = try decoder.decode(CipherLoginData.self, from: AesGcm.decrypt(encCipher.protectedData, key: key).data(using: .utf8)!)
             break
         case .SecureNote:
-            self.secureNoteData = try decoder.decode(CipherSecureNoteData.self, from: aesGcmDecrypt(data: hexStringToData(string: encCipher.protectedData)!, key: key))
+            self.secureNoteData = try decoder.decode(CipherSecureNoteData.self, from: AesGcm.decrypt(encCipher.protectedData, key: key).data(using: .utf8)!)
             break
         case .Card:
-            self.cardData = try decoder.decode(CipherCardData.self, from: aesGcmDecrypt(data: hexStringToData(string: encCipher.protectedData)!, key: key))
+            self.cardData = try decoder.decode(CipherCardData.self, from: AesGcm.decrypt(encCipher.protectedData, key: key).data(using: .utf8)!)
             break
         }
     }

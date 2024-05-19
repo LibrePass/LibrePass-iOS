@@ -33,24 +33,17 @@ struct LibrePassRegistrationWindow: View {
             TextField("API server", text: $apiServer)
                 .autocapitalization(.none)
             
-            Button("Register") {
+            ButtonWithSpinningWheel(text: "Register") {
                 if self.confirmPassword != self.password {
                     self.confirmPassword = ""
                     
                     self.errorString = "Password doesn't match"
-                    return
-                }
-                
-                do {
-                    self.context.lClient = LibrePassClient(apiUrl: self.apiServer)
-                    try self.context.lClient!.register(email: self.email, password: self.password, passwordHint: self.passwordHint)
-                    self.context.lClient = nil
-                    
+                    self.showAlert = true
+                } else {
+                    try LibrePassClient.register(email: self.email, password: self.password, passwordHint: self.passwordHint, apiUrl: self.apiServer)
+                        
                     self.errorString = "Check your mailbox, verify email and log in"
                     self.registered = true
-                    self.showAlert = true
-                } catch {
-                    self.errorString = error.localizedDescription
                     self.showAlert = true
                 }
             }
